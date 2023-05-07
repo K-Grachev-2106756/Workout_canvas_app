@@ -5,7 +5,7 @@ const startBtn = document.getElementById("start");
 const resetBtn = document.getElementById("reset");
 
 function startTimer() {
-	startBtn.textContent = "STOP";
+	startBtn.textContent = "Pause";
 	startBtn.id = ("start");
 	startBtn.id = ("stop");
 	startBtn.removeEventListener("click", startTimer);
@@ -26,7 +26,7 @@ function startTimer() {
 }
 
 function stopTimer() {
-	startBtn.textContent = "START";
+	startBtn.textContent = "Resume";
 	startBtn.id = ("stop");
 	startBtn.id = ("start");
 	startBtn.removeEventListener("click", stopTimer);
@@ -41,6 +41,7 @@ function resetTimer() {
 	hours = 0;
 	stopwatch.textContent = "00:00:00";
 	stopTimer();
+	startBtn.textContent = "Start";
 }
 
 function pad(num) {

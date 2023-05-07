@@ -23,56 +23,56 @@ function formatTime(time) {
 }
 
 // Function to start the timer
-function startTimer() {
-  // Set the time
-  time =
-    parseInt(hoursInput.value || 0) * 3600 +
-    parseInt(minutesInput.value || 0) * 60 +
-    parseInt(secondsInput.value || 0);
+function startTimer() {  
+    // Set the time
+    time =
+        parseInt(hoursInput.value || 0) * 3600 +
+        parseInt(minutesInput.value || 0) * 60 +
+        parseInt(secondsInput.value || 0);
 
-  // Check if time is greater than 0
-  if (time > 0) {
-    // Disable the inputs
-    hoursInput.disabled = true;
-    minutesInput.disabled = true;
-    secondsInput.disabled = true;
-    // Hide the inputs
-    inputs.style.display = "none";
-    // Hide the start button
-    startBtn.style.display = "none";
-    // Show the pause and reset buttons
-    pauseBtn.style.display = "block";
-    resetBtn.style.display = "block";
-    // Hide message
-    message.textContent = "";
-    message.style.display = "none";
-    // Start the timer
-    display.textContent = formatTime(time);
-    timerInterval = setInterval(() => {
-        time--;
+    // Check if time is greater than 0
+    if (time > 0) {
+        // Disable the inputs
+        hoursInput.disabled = true;
+        minutesInput.disabled = true;
+        secondsInput.disabled = true;
+        // Hide the inputs
+        inputs.style.display = "none";
+        // Hide the start button
+        startBtn.style.display = "none";
+        // Show the pause and reset buttons
+        pauseBtn.style.display = "block";
+        resetBtn.style.display = "block";
+        // Hide message
+        message.textContent = "";
+        message.style.display = "none";
+        // Start the timer
         display.textContent = formatTime(time);
-        if (time <= 0) {
-            clearInterval(timerInterval);
-            resumeBtn.style.display = "none";
-            pauseBtn.style.display = "none";
-            // alert("Time's up!");
-            inputs.style.display = "none";
-            hoursInput.value = "";
-            minutesInput.value = "";
-            secondsInput.value = "";
-            resetBtn.style.display = "block";
-            clearInterval(timerInterval);
-            time = 0;
-            display.textContent = "00:00:00";
-            message.textContent = "Time's up!"
-            message.style.display = "block";
+        timerInterval = setInterval(() => {
+            time--;
+            display.textContent = formatTime(time);
+            if (time <= 0) {
+                clearInterval(timerInterval);
+                resumeBtn.style.display = "none";
+                pauseBtn.style.display = "none";
+                // alert("Time's up!");
+                inputs.style.display = "none";
+                hoursInput.value = "";
+                minutesInput.value = "";
+                secondsInput.value = "";
+                resetBtn.style.display = "block";
+                clearInterval(timerInterval);
+                time = 0;
+                display.textContent = "00:00:00";
+                message.textContent = "Time's up!"
+                message.style.display = "block";
+            }
+        }, 1000);
+        } else {
+            // message.style.display = "block";
+            // message.textContent = "Please enter a valid time";
+            // message.style.border = "";
         }
-    }, 1000);
-    } else {
-        message.style.display = "block";
-        message.textContent = "Please enter a valid time";
-        message.style.border = "";
-    }
 }
 
 // Function to pause the timer
@@ -116,12 +116,13 @@ function resetTimer() {
     minutesInput.disabled = false;
     secondsInput.disabled = false;
     // Show the inputs
-    inputs.style.display = "block";
+    inputs.style.display = "flex";
     // Show the start button and hide the pause, reset, and continue buttons
     startBtn.style.display = "block";
     pauseBtn.style.display = "none";
     resetBtn.style.display = "none";
     resumeBtn.style.display = "none";
+    // inputsContainer.classList.add("centered");
     // Reset the display text
     display.textContent = "00:00:00";
     message.textContent = "";
