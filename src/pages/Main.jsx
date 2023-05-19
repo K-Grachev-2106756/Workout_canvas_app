@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+/*import './App.css';*/
 import { createRoot} from 'react-dom/client';
+
+
+
+
 const root = createRoot(document.getElementById('root'));
 let globalMode = 'timergym';
 let timeIsEnd = false;
+
 const formatTime = (time) => {
   const minutes = Math.floor(time / 60).toString().padStart(2, '0');
   const seconds = (time % 60).toString().padStart(2, '0');
   return `${minutes}:${seconds}`;
 };
+
 function div(val, by){
   return (val - val % by) / by;
 }
@@ -66,14 +72,13 @@ const Stopwatch = () => {
         {pad(hours)}:{pad(minutes)}:{pad(seconds)}
       </div>
       <div className="controls">
-        <table>
-          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Стоп" : "Старт"}</button></div>
-          <div><button id="reset" className="button" onClick={resetTimer}>Сброс</button></div>
-        </table>
+          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Stop" : "Start"}</button></div>
+          <div><button id="reset" className="button" onClick={resetTimer}>Reset</button></div>
       </div>
     </div>
   );
 };
+
 const TimerGym = () => {
   const [workTimeConst, setWorkTimeConst] = useState(0);
   const [chillTimeConst, setChillTimeConst] = useState(0);
@@ -81,7 +86,6 @@ const TimerGym = () => {
   const [currentMode, setCurrentMode] = useState('WORK');
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
-
 
   const handleStart = () => {
     const rawWorkMin = Math.abs(parseInt(document.getElementById('min_input_work').value)) || 0;
@@ -179,18 +183,17 @@ const TimerGym = () => {
     };
   }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
   
-
   const training_with_breaks_active = <div>
       <div>
         <div id='mode'>
-          {(currentMode === 'WORK') ? 'тренировка' : 'отдых'}
+          {(currentMode === 'WORK') ? 'workout' : 'break'}
           </div>
         <div id = "time">{formatTime(timeLeft)}</div>
-        <div id="repLeft">Подходов осталось: {repToEnd}</div>
+        <div id="repLeft">Repetitions left: {repToEnd}</div>
       </div>
       <div className='controls'>
         <table>
-          <div><button className = "button" id = "reset" onClick={handleReset}>Сброс</button></div>
+          <div><button className = "button" id = "reset" onClick={handleReset}>Reset</button></div>
         </table>
       </div>
     </div>
@@ -198,7 +201,7 @@ const TimerGym = () => {
       <div className="inputs">
         <table>
           <tr id="time_name">
-            <th colSpan={3}>тренировка</th>
+            <th colSpan={3}>workout</th>
           </tr>
           <tr>
             <td>
@@ -212,7 +215,7 @@ const TimerGym = () => {
           <tr id='space'></tr>
           <tr id="time_name">
             
-            <th colSpan={3}>отдых</th>
+            <th colSpan={3}>break</th>
           </tr>
           
           <tr>
@@ -227,7 +230,7 @@ const TimerGym = () => {
           <tr id='space'></tr>
           <tr id="time_name">
             
-            <th colSpan={3}>подходов</th>
+            <th colSpan={3}>repeats</th>
           </tr>
           
           <tr >
@@ -236,10 +239,8 @@ const TimerGym = () => {
         </table> 
       </div>
       <div className="controls">
-        <table>
-          <div><button id = "start" className = "button" onClick={handleStart}>Старт</button></div>
-          <div><button id = "reset" className = "button" onClick={handleClear}>Сброс</button></div>
-        </table>
+          <div><button id = "start" className = "button" onClick={handleStart}>Start</button></div>
+          <div><button id = "reset" className = "button" onClick={handleClear}>Clear</button></div>
       </div>
     </div>
 
@@ -265,24 +266,27 @@ function setModeTimer() {
   timeIsEnd = false;
   root.render(<Menu />);
 }
-const menu = <div id="menu">
-  <button onClick={setModeStopwatch}>Секундомер</button>
-  <button onClick={setModeTimer}>Таймер</button>
-</div>
+
 function resetTimeIsEnd() {
   timeIsEnd = false;
   root.render(<Menu />);
 }
+
+const menu = <div id="menu">
+  <button onClick={setModeStopwatch}>Stopwatch</button>
+  <button onClick={setModeTimer}>Timer</button>
+</div>
+
 const Menu = () => {
   if (globalMode === 'timergym' && timeIsEnd) {
     return (
       <>
         {menu}
-        <div id='message'>Время вышло</div>
+        <div id='message'>Time's up</div>
         <div className="controls">
           
           <table>
-            <div className='controls'><button id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
+            <div className='controls'><button id="reset" className="button" onClick={resetTimeIsEnd}>RESET</button></div>
           </table>
         </div>
       </>
@@ -305,4 +309,10 @@ const Menu = () => {
   } 
 };
 
-export default Menu;
+export const Page = () => {
+  return (
+    <main className="container">
+      <Menu/>
+    </main>
+  )
+}
