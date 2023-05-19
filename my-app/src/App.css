@@ -1,4 +1,4 @@
-/* Подгрузка шрифтов */
+/* РџРѕРґРіСЂСѓР·РєР° С€СЂРёС„С‚РѕРІ */
 @font-face {
 	font-family: 'digital-7';
 	src: url('fonts/digital-7.ttf');
@@ -17,13 +17,19 @@
 	font-weight: normal;
 	font-style: normal;
 }
+@font-face { 
+	font-family: 'golos';
+	src: url('fonts/golos.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
 /* @font-face { 
 	font-family: 'BigTimer';
 	src: url('fonts/BigTimer.ttf');
 	font-weight: normal;
 	font-style: normal;
 } */
-/* Отключение стрелочек в поля с вводом */
+/* РћС‚РєР»СЋС‡РµРЅРёРµ СЃС‚СЂРµР»РѕС‡РµРє РІ РїРѕР»СЏ СЃ РІРІРѕРґРѕРј */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -43,7 +49,7 @@ body {
   font-size: 3rem;
   /* font-family: open-sans; */
 
-  font-family: BigTimer, open-sans;
+  font-family: golos, BigTimer, open-sans;
 }
 #main {
     justify-content: center;
@@ -63,8 +69,9 @@ body {
 #message {
   display: flex;
   position: relative;
-  font-family: BigTimer, open-sans;
+  font-family:golos, BigTimer, open-sans;
   justify-content: center;
+  text-align: center;
   font-size: 10rem;
   padding: 0.3rem;
   margin-top: 7%;
@@ -97,7 +104,7 @@ body {
   font-family: open-sans;
 }
 
-/* Стили только для тренировки с интервалами */
+/* РЎС‚РёР»Рё С‚РѕР»СЊРєРѕ РґР»СЏ С‚СЂРµРЅРёСЂРѕРІРєРё СЃ РёРЅС‚РµСЂРІР°Р»Р°РјРё */
 #separator {
     position: relative;
     vertical-align: middle;
@@ -108,7 +115,7 @@ body {
     color: rgb(0, 52, 89);
     align-items: center;
     text-align: center;
-    font-family: BigTimer, opensans;
+    font-family:golos, BigTimer, opensans;
 }
 #min_input_work {
   /* text-align: right; */
@@ -139,7 +146,7 @@ tr {
   border:solid rgb(0, 59, 89);
   /* background-color: aqua; */
 }
-/* Общие стили для полей ввода */
+/* РћР±С‰РёРµ СЃС‚РёР»Рё РґР»СЏ РїРѕР»РµР№ РІРІРѕРґР° */
 .inputs {
   display: flex;
   justify-content: center;
@@ -177,7 +184,7 @@ tr {
 
 }
 
-/* Общие стили кнопок */
+/* РћР±С‰РёРµ СЃС‚РёР»Рё РєРЅРѕРїРѕРє */
 .controls {
   position: absolute;
   display: flex;
@@ -201,7 +208,7 @@ tr {
 	border-radius: 0.8rem;
 	margin: 1.3rem;
 	cursor: pointer;
-	font-family: raleway;
+	font-family: golos, raleway;
 }
 #start {
 	background-color: rgb(27, 116, 107);
@@ -236,7 +243,7 @@ tr {
 	color: rgb(15, 210, 1);
 }
 
-/* Общие стили для отображения времени */
+/* РћР±С‰РёРµ СЃС‚РёР»Рё РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЂРµРјРµРЅРё */
 #time_name th {
   color: rgb(159, 177, 188);
   margin-bottom: 0rem;
@@ -271,7 +278,7 @@ tr {
   height: 0rem;
 }
 #menu button {
-  font-family: BigTimer, open-sans;
+  font-family:golos, BigTimer, open-sans;
   color:white;
   width: calc(100%/2);
   display: block;
@@ -287,7 +294,7 @@ tr {
 }
 
 #menu button:hover{
-  font-family: open-sans;
+  font-family: golos, open-sans;
   color:white;
   text-align: centre;
   /* background-color: rgb(234, 82, 111); */
@@ -295,7 +302,7 @@ tr {
   /* background-color: rgb(255, 255, 255); */
 }
 #menu button:active{
-  font-family: open-sans;
+  font-family: golos, open-sans;
   color:white;
   text-align: centre;
   background-color: rgb(0, 59, 102);
