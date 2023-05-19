@@ -1,0 +1,304 @@
+/* Подгрузка шрифтов */
+@font-face {
+	font-family: 'digital-7';
+	src: url('fonts/digital-7.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+    font-family: 'open-sans';
+    src: url('fonts/OpenSans-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face { 
+	font-family: 'raleway';
+	src: url('fonts/Raleway-SemiBold.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+/* @font-face { 
+	font-family: 'BigTimer';
+	src: url('fonts/BigTimer.ttf');
+	font-weight: normal;
+	font-style: normal;
+} */
+/* Отключение стрелочек в поля с вводом */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+body {
+  height: 100%;
+  /* overflow-y: hidden; */
+  /* background-color: rgb(179, 220, 245); */
+  /* background-color: white; */
+  background-color: aliceblue;
+  color: white;
+  /* display: flex; */
+  /* align-items: center; */
+  /* text-align: center; */
+  font-size: 3rem;
+  /* font-family: open-sans; */
+
+  font-family: BigTimer, open-sans;
+}
+#main {
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    margin-bottom: 0rem;
+    font-size: 10;
+    /* font-family: raleway; */
+}
+
+
+#time_name {
+  margin-top:1rem ;
+  font-size: 2rem;
+}
+
+#message {
+  display: flex;
+  position: relative;
+  font-family: BigTimer, open-sans;
+  justify-content: center;
+  font-size: 10rem;
+  padding: 0.3rem;
+  margin-top: 7%;
+  color: rgb(0, 52, 89);
+}
+#mode {
+  display: flex;
+  position: relative;
+  font-family: open-sans;
+  justify-content: center;
+  font-size: 10rem;
+  /* padding: 0.3rem; */
+  margin-top: 2%;
+  color:rgb(159, 177, 188);
+  margin-bottom: 0;
+}
+#repLeft {
+  display: flex;
+  position: relative;
+  font-family: open-sans;
+  justify-content: center;
+  font-size: 6rem;
+  /* padding: 0.3rem; */
+  margin-top: 2%;
+  color:rgb(159, 177, 188);
+  margin-bottom: 0;
+}
+#display {
+  position: relative;
+  font-family: open-sans;
+}
+
+/* Стили только для тренировки с интервалами */
+#separator {
+    position: relative;
+    vertical-align: middle;
+    margin: 0 0 10px 0;
+    padding: 0.6rem;
+    font-size: 5rem;
+    width: 0.1ch;
+    color: rgb(0, 52, 89);
+    align-items: center;
+    text-align: center;
+    font-family: BigTimer, opensans;
+}
+#min_input_work {
+  /* text-align: right; */
+  text-align: center;
+  border:solid rgb(0, 59, 89);
+}
+#sec_input_work {
+  /* text-align: left; */
+  text-align: center;
+  border:solid rgb(0, 59, 89);
+}
+#min_input_chill {
+  /* text-align: right; */
+  text-align: center;
+  border:solid rgb(0, 59, 89);
+}
+#sec_input_chill {
+  /* text-align: left; */
+  text-align: center;
+  border:solid rgb(0, 59, 89);
+}
+#rep_input {
+  text-align: center;
+  width: 10ch;
+  border:solid rgb(0, 59, 89);
+}
+tr {
+  border:solid rgb(0, 59, 89);
+  /* background-color: aqua; */
+}
+/* Общие стили для полей ввода */
+.inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: antiquewhite; */
+}
+.inputs input::placeholder {
+  color:rgb(120, 154, 173);
+}
+.inputs input {
+    
+    position: relative;
+    /* margin-top: 1000px; */
+    /* margin: 0 1rem; */
+    padding: 0.6rem;
+    font-size: 5rem;
+    width: 3ch;
+    color: rgb(0, 52, 89);
+    align-items: center;
+    text-decoration:wavy;
+    /* background-color: black; */
+    /* background-color: rgb(179, 220, 245); */
+    background-color: aliceblue;
+    /* background-color: antiquewhite; */
+    border: none;
+    border-radius: 1.2rem;
+}
+.inputs input:focus {
+  border: solid 2px crimson;
+  border: none;
+  /* background-color: bisque; */
+  /* text-decoration: underline; */
+  /* color: crimson; */
+  /* background-color: aqua; */
+
+}
+
+/* Общие стили кнопок */
+.controls {
+  position: absolute;
+  display: flex;
+  position: relative;
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.button {
+	/* display: inline-block; */
+	padding: 10px 20px;
+	font-size: 5rem;
+	background-color: white;
+	color: black;
+  width: 18rem;
+	/* border: solid 0.3rem black; */
+  border: none;
+	border-radius: 0.8rem;
+	margin: 1.3rem;
+	cursor: pointer;
+	font-family: raleway;
+}
+#start {
+	background-color: rgb(27, 116, 107);
+	color: rgb(61, 177, 164);
+}
+#start:hover {
+	background-color: rgb(28, 127, 117);
+	color: rgb(61, 177, 164);
+}
+#pause {
+	background-color: rgba(176, 46, 12);
+	color: rgb(235, 69, 17);
+}
+/* #reset {
+	background-color: rgba(176, 46, 12);
+	color: rgb(235, 69, 17);
+}
+#reset:hover {
+	background-color: rgb(198, 50, 13);
+	color: rgb(235, 69, 17);
+} */
+#reset {
+	background-color: rgba(176, 46, 12);
+	color: rgb(235, 69, 17);
+}
+#reset:hover {
+	background-color: rgb(205, 50, 12);
+	color: rgb(235, 69, 17);
+}
+#resume {
+  background-color: rgb(0, 97, 0);
+	color: rgb(15, 210, 1);
+}
+
+/* Общие стили для отображения времени */
+#time_name th {
+  color: rgb(159, 177, 188);
+  margin-bottom: 0rem;
+  /* background-color: antiquewhite; */
+}
+#time {
+
+  font-size: 11rem;
+  padding: 0.3rem;
+  margin-top: 0%;
+	/* color: white; */
+  /* background-color: ; */
+  color:rgb(0, 52, 89);
+	text-align: center;
+	font-family: BigTimer, open-sans, digital-7, sans-serif;
+}
+
+#menu {
+  /* background-color: rgb(139, 100, 100); */
+  background-color: rgb(255, 51, 31);
+  /* position:sticky; */
+  /* overflow: hidden; */
+  overflow: visible;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  color:aliceblue;
+  overflow: hidden;
+
+}
+#space {
+  height: 0rem;
+}
+#menu button {
+  font-family: BigTimer, open-sans;
+  color:white;
+  width: calc(100%/2);
+  display: block;
+  font-size: 2rem;
+  /* margin: 0rem 0rem; */
+  padding: 0.7rem 0rem;
+  text-align: centre;
+
+  border: none;
+  /* background-color: rgb(159, 177, 188); */
+  /* background-color: rgb(255, 51, 31); */
+  background-color: rgb(0, 52, 89);
+}
+
+#menu button:hover{
+  font-family: open-sans;
+  color:white;
+  text-align: centre;
+  /* background-color: rgb(234, 82, 111); */
+  background-color: rgb(0, 59, 102);
+  /* background-color: rgb(255, 255, 255); */
+}
+#menu button:active{
+  font-family: open-sans;
+  color:white;
+  text-align: centre;
+  background-color: rgb(0, 59, 102);
+}
+  
+  
