@@ -8,6 +8,7 @@ import { createSmartappDebugger, createAssistant } from "@salutejs/client";
 const root = createRoot(document.getElementById('root'));
 let globalMode = 'stopwatch';
 let timeIsEnd = false;
+let stopwatchIsRunning = false;
 
 const formatTime = (time) => {
   const minutes = Math.floor(time / 60).toString().padStart(2, '0');
@@ -71,8 +72,8 @@ const Stopwatch = () => {
           {pad(hours)}:{pad(minutes)}:{pad(seconds)}
       </div>
       <div className="controls">
-          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Stop" : "Start"}</button></div>
-          <div><button id="reset" className="button" onClick={resetTimer}>Reset</button></div>
+          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Стоп" : "Старт"}</button></div>
+          <div><button id="reset" className="button" onClick={resetTimer}>Сброс</button></div>
       </div>
       </div>
   );
@@ -183,15 +184,18 @@ const TimerGym = () => {
 
   const training_with_breaks_active = <div>
       <div>
-          <div id='mode'>
-          {(currentMode === 'WORK') ? 'workout' : 'break'}
-          </div>
+        <div id='mode_work'>
+          {(currentMode === 'WORK') ? 'тренировка' : ''}
+        </div>
+        <div id='mode_chill'>
+          {(currentMode === 'CHILL') ? 'отдых' : ''}
+        </div>
           <div id = "time">{formatTime(timeLeft)}</div>
-          <div id="repLeft">Repetitions left: {repToEnd}</div>
+          <div id="repLeft">Подходов осталось: {repToEnd}</div>
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" id = "reset" onClick={handleReset}>Reset</button></div>
+          <div><button className = "button" id = "reset" onClick={handleReset}>Сброс</button></div>
           </table>
       </div>
       </div>
@@ -199,7 +203,7 @@ const TimerGym = () => {
       <div>
           <table className="inputs">
           <tr id="time_name">
-              <th colSpan={3}>workout</th>
+              <th colSpan={3}>тренировка</th>
           </tr>
           <tr>
               <td>
@@ -212,8 +216,7 @@ const TimerGym = () => {
           </tr>
           <tr id='space'></tr>
           <tr id="time_name">
-              
-              <th colSpan={3}>break</th>
+              <th colSpan={3}>отдых</th>
           </tr>
           
           <tr>
@@ -228,7 +231,7 @@ const TimerGym = () => {
           <tr id='space'></tr>
           <tr id="time_name">
               
-              <th colSpan={3}>repeats</th>
+              <th colSpan={3}>подходы</th>
           </tr>
           
           <tr >
@@ -237,8 +240,8 @@ const TimerGym = () => {
           </table> 
       </div>
       <div className="controls">
-          <div><button id = "start" className = "button" onClick={handleStart}>Start</button></div>
-          <div><button id = "reset" className = "button" onClick={handleClear}>Clear</button></div>
+          <div><button id = "start" className = "button" onClick={handleStart}>Старт</button></div>
+          <div><button id = "reset" className = "button" onClick={handleClear}>Стоп</button></div>
       </div>
       </div>
 
@@ -272,19 +275,19 @@ function resetTimeIsEnd() {
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Stopwatch</button>
-    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Crossfit</button>
+    <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
+    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кросфит</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
     return (
       <>
         {menu}
-        <div id='message'>Time's up</div>
+        <div id='message'>Время вышло</div>
         <div className="controls">
           
           <table>
-            <div className='controls'><button id="reset" className="button" onClick={resetTimeIsEnd}>RESET</button></div>
+            <div className='controls'><button id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
           </table>
         </div>
       </>
@@ -319,14 +322,37 @@ const initializeAssistant = (getState/*: any*/) => {
 };
 
 function startStopwatchExternally() {
+  if (!stopwatchIsRunning) {
+    stopwatchIsRunning = true;
+    const startButton = document.getElementById('start');
+    startButton.click();
+  }
+}
+function stopStopwatchExternally() {
+  if (stopwatchIsRunning) {
+    stopwatchIsRunning = false;
+    const stopButton = document.getElementById('start');
+    stopButton.click();
+  }
+}
+function resetStopwatchExternally() {
+  const resetButton = document.getElementById('reset');
+  resetButton.click();
+}
+
+function startCrossfitExternally() {
   const startButton = document.getElementById('start');
   startButton.click();
 }
-
-function stopStopwatchExternally() {
+function stopCrossfitExternally() {
   const stopButton = document.getElementById('start');
   stopButton.click();
 }
+function resetCrossfitExternally() {
+  const resetButton = document.getElementById('reset');
+  resetButton.click();
+}
+
 
 export class Whole extends React.Component {
 
@@ -379,13 +405,34 @@ export class Whole extends React.Component {
           setModeStopwatch();
           break;
         case 'open_crossfit':
+          stopwatchIsRunning = false;
           setModeTimer();
           break;
         case 'start_stopwatch':
-          startStopwatchExternally();
+          setModeStopwatch();
+          setTimeout(() => {
+            startStopwatchExternally();
+          }, 100);
           break;
         case 'stop_stopwatch':
           stopStopwatchExternally();
+          break;
+        case 'reset_stopwatch':
+          stopwatchIsRunning = false;
+          resetStopwatchExternally();
+          break;
+        case 'start_crossfit':
+          setModeTimer();
+          setTimeout(() => {
+            startCrossfitExternally();
+          }, 100);
+          
+          break;
+        case 'stop_crossfit':
+          stopCrossfitExternally();
+          break;
+        case 'reset_crossfit':
+          resetCrossfitExternally();
           break;
         default:
           throw new Error();
