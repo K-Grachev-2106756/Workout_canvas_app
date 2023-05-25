@@ -318,7 +318,17 @@ const initializeAssistant = (getState/*: any*/) => {
   return createAssistant({ getState });
 };
 
-export default class Whole extends React.Component {
+function startStopwatchExternally() {
+  const startButton = document.getElementById('start');
+  startButton.click();
+}
+
+function stopStopwatchExternally() {
+  const stopButton = document.getElementById('start');
+  stopButton.click();
+}
+
+export class Whole extends React.Component {
 
   constructor(props) {
     super(props);
@@ -365,51 +375,29 @@ export default class Whole extends React.Component {
     console.log('dispatchAssistantAction', action);
     if (action) {
       switch (action.type) {
-        /*case 'open_crossfit':
-          return this.open_crossfit(action);
-
         case 'open_stopwatch':
-          return this.open_stopwatch(action);*/
-        case 'start_stopwatch':
-            TimerGym.handleStart();
-            break;
-        case 'open_stopwatch':
-            setModeStopwatch();
-            break;
+          setModeStopwatch();
+          break;
         case 'open_crossfit':
-            setModeTimer();
-            break;
+          setModeTimer();
+          break;
+        case 'start_stopwatch':
+          startStopwatchExternally();
+          break;
+        case 'stop_stopwatch':
+          stopStopwatchExternally();
+          break;
         default:
           throw new Error();
       }
     }
   }
 
-  /*open_crossfit (action) {
-    console.log('open_crossfit', action);
-    this.setState(Logic.setModeTimer())
-  }
-
-  open_stopwatch (action) {
-    console.log('open_stopwatch', action);
-    this.setState(Logic.setModeStopwatch())
-  }*/
-
-  done_note (action) {
-    console.log('done_note', action);
-    this.setState({
-      notes: this.state.notes.map((note) =>
-        (note.id === action.id)
-        ? { ...note, completed: !note.completed }
-        : note
-      ),
-    })
-  }
-
   render() {
     console.log('render');
     return (
-      <Menu />
+      <Menu
+      />
     )
   }
 }
