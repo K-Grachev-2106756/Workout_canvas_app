@@ -402,18 +402,24 @@ export class Whole extends React.Component {
     if (action) {
       switch (action.type) {
         case 'open_stopwatch':
-          setModeStopwatch();
-          break;
+          return setModeStopwatch();
         case 'open_crossfit':
           stopwatchIsRunning = false;
-          setModeTimer();
-          break;
+          return setModeTimer();
         case 'start_stopwatch':
-          setModeStopwatch();
-          setTimeout(() => {
+          if(globalMode==='timergym'){
+            setModeStopwatch();
+          }
+          return setTimeout(() => {
             startStopwatchExternally();
           }, 100);
-          break;
+        case 'start_crossfit':
+          if(globalMode==='stopwatch'){
+            setModeTimer();
+          }
+          return setTimeout(() => {
+            startCrossfitExternally();
+          }, 100);
         case 'stop_stopwatch':
           stopStopwatchExternally();
           break;
@@ -421,13 +427,7 @@ export class Whole extends React.Component {
           stopwatchIsRunning = false;
           resetStopwatchExternally();
           break;
-        case 'start_crossfit':
-          setModeTimer();
-          setTimeout(() => {
-            startCrossfitExternally();
-          }, 100);
-          
-          break;
+        
         case 'stop_crossfit':
           stopCrossfitExternally();
           break;
