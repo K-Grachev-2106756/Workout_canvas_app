@@ -10,72 +10,72 @@ let globalMode = 'stopwatch';
 let timeIsEnd = false;
 
 const formatTime = (time) => {
-const minutes = Math.floor(time / 60).toString().padStart(2, '0');
-const seconds = (time % 60).toString().padStart(2, '0');
-return `${minutes}:${seconds}`;
+  const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+  const seconds = (time % 60).toString().padStart(2, '0');
+  return `${minutes}:${seconds}`;
 };
 
 function div(val, by){
-return (val - val % by) / by;
+  return (val - val % by) / by;
 }
 
 const Stopwatch = () => {
-const [timerInterval, setTimerInterval] = useState(null);
-let [seconds, setSeconds] = useState(0);
-let [minutes, setMinutes] = useState(0);
-let [hours, setHours] = useState(0);
+  const [timerInterval, setTimerInterval] = useState(null);
+  let [seconds, setSeconds] = useState(0);
+  let [minutes, setMinutes] = useState(0);
+  let [hours, setHours] = useState(0);
 
-useEffect(() => {
-    return () => clearInterval(timerInterval);
-}, [timerInterval]);
+  useEffect(() => {
+      return () => clearInterval(timerInterval);
+  }, [timerInterval]);
 
-function startTimer() {
-    setTimerInterval(setInterval(() => {
-    setSeconds(s => {
-        const newSeconds = s + 1;
-        if (newSeconds >= 60) {
-        setMinutes(m => {
-            const newMinutes = m + Math.floor(newSeconds / 60);
-            if (newMinutes >= 60) {
-            setHours(h => h + Math.floor(newMinutes / 60));
-            return newMinutes % 60;
-            }
-            return newMinutes;
-        });
-        return newSeconds % 60;
-        }
-        return newSeconds;
-    });
-    }, 1000));
-}
+  function startTimer() {
+      setTimerInterval(setInterval(() => {
+      setSeconds(s => {
+          const newSeconds = s + 1;
+          if (newSeconds >= 60) {
+          setMinutes(m => {
+              const newMinutes = m + Math.floor(newSeconds / 60);
+              if (newMinutes >= 60) {
+              setHours(h => h + Math.floor(newMinutes / 60));
+              return newMinutes % 60;
+              }
+              return newMinutes;
+          });
+          return newSeconds % 60;
+          }
+          return newSeconds;
+      });
+      }, 1000));
+  }
 
-function stopTimer() {
-    clearInterval(timerInterval);
-    setTimerInterval(null);
-}
+  function stopTimer() {
+      clearInterval(timerInterval);
+      setTimerInterval(null);
+  }
 
-function resetTimer() {
-    setSeconds(0);
-    setMinutes(0);
-    setHours(0);
-    stopTimer();
-}
+  function resetTimer() {
+      setSeconds(0);
+      setMinutes(0);
+      setHours(0);
+      stopTimer();
+  }
 
-function pad(num) {
-    return num < 10 ? "0" + num : num;
-}
+  function pad(num) {
+      return num < 10 ? "0" + num : num;
+  }
 
-return (
-    <div id="main">
-    <div id="time">
-        {pad(hours)}:{pad(minutes)}:{pad(seconds)}
-    </div>
-    <div className="controls">
-        <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Stop" : "Start"}</button></div>
-        <div><button id="reset" className="button" onClick={resetTimer}>Reset</button></div>
-    </div>
-    </div>
-);
+  return (
+      <div id="main">
+      <div id="time">
+          {pad(hours)}:{pad(minutes)}:{pad(seconds)}
+      </div>
+      <div className="controls">
+          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Stop" : "Start"}</button></div>
+          <div><button id="reset" className="button" onClick={resetTimer}>Reset</button></div>
+      </div>
+      </div>
+  );
 };
 
 const TimerGym = () => {
@@ -148,7 +148,7 @@ const TimerGym = () => {
                 setRepToEnd((prevRepToEnd) => prevRepToEnd - 1);
             } else {
                 timeIsEnd = true;
-                root.render(<Menu />, document.getElementById('root'))
+                root.render(<Menu />)
                 setIsRunning(false);
             }
             } 
@@ -179,101 +179,101 @@ const TimerGym = () => {
     return () => {
     clearInterval(timer);
     };
-}, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
+  }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
 
-const training_with_breaks_active = <div>
-    <div>
-        <div id='mode'>
-        {(currentMode === 'WORK') ? 'workout' : 'break'}
-        </div>
-        <div id = "time">{formatTime(timeLeft)}</div>
-        <div id="repLeft">Repetitions left: {repToEnd}</div>
-    </div>
-    <div className='controls'>
-        <table>
-        <div><button className = "button" id = "reset" onClick={handleReset}>Reset</button></div>
-        </table>
-    </div>
-    </div>
-const training_with_breaks_input = <div>
-    <div className="inputs">
-        <table>
-        <tr id="time_name">
-            <th colSpan={3}>workout</th>
-        </tr>
-        <tr>
-            <td>
-            <input type="number" id="min_input_work" min="0" max="59" placeholder="00" />
-            </td>
-            <td id="separator">:</td>
-            <td>
-            <input type="number" id="sec_input_work" min="0" max="59" placeholder="00" />
-            </td>
-        </tr>
-        <tr id='space'></tr>
-        <tr id="time_name">
-            
-            <th colSpan={3}>break</th>
-        </tr>
-        
-        <tr>
-            <td>
-            <input type="number" id="min_input_chill" min="0" max="59" placeholder="00" />
-            </td>
-            <td id="separator">:</td>
-            <td>
-            <input type="number" id="sec_input_chill" min="0" max="59" placeholder="00" />
-            </td>
-        </tr>
-        <tr id='space'></tr>
-        <tr id="time_name">
-            
-            <th colSpan={3}>repeats</th>
-        </tr>
-        
-        <tr >
-            <td colSpan="3"><input type="number" id="rep_input" placeholder="1" /></td>
-        </tr>
-        </table> 
-    </div>
-    <div className="controls">
-        <div><button id = "start" className = "button" onClick={handleStart}>Start</button></div>
-        <div><button id = "reset" className = "button" onClick={handleClear}>Clear</button></div>
-    </div>
-    </div>
+  const training_with_breaks_active = <div>
+      <div>
+          <div id='mode'>
+          {(currentMode === 'WORK') ? 'workout' : 'break'}
+          </div>
+          <div id = "time">{formatTime(timeLeft)}</div>
+          <div id="repLeft">Repetitions left: {repToEnd}</div>
+      </div>
+      <div className='controls'>
+          <table>
+          <div><button className = "button" id = "reset" onClick={handleReset}>Reset</button></div>
+          </table>
+      </div>
+      </div>
+  const training_with_breaks_input = <div>
+      <div>
+          <table className="inputs">
+          <tr id="time_name">
+              <th colSpan={3}>workout</th>
+          </tr>
+          <tr>
+              <td>
+              <input type="number" id="min_input_work" min="0" max="59" placeholder="00" />
+              </td>
+              <td id="separator">:</td>
+              <td>
+              <input type="number" id="sec_input_work" min="0" max="59" placeholder="00" />
+              </td>
+          </tr>
+          <tr id='space'></tr>
+          <tr id="time_name">
+              
+              <th colSpan={3}>break</th>
+          </tr>
+          
+          <tr>
+              <td>
+              <input type="number" id="min_input_chill" min="0" max="59" placeholder="00" />
+              </td>
+              <td id="separator">:</td>
+              <td>
+              <input type="number" id="sec_input_chill" min="0" max="59" placeholder="00" />
+              </td>
+          </tr>
+          <tr id='space'></tr>
+          <tr id="time_name">
+              
+              <th colSpan={3}>repeats</th>
+          </tr>
+          
+          <tr >
+              <td colSpan="3"><input type="number" id="rep_input" placeholder="1" /></td>
+          </tr>
+          </table> 
+      </div>
+      <div className="controls">
+          <div><button id = "start" className = "button" onClick={handleStart}>Start</button></div>
+          <div><button id = "reset" className = "button" onClick={handleClear}>Clear</button></div>
+      </div>
+      </div>
 
 return (
-    <div id="main">
-    {isRunning ? (
-        training_with_breaks_active
+  <div id="main">
+  {isRunning ? (
+      training_with_breaks_active
     ) : (
-        training_with_breaks_input
+      training_with_breaks_input
     )}
-    </div>
+  </div>
 );
 };
 
 function setModeStopwatch() {
-globalMode = 'stopwatch';
-timeIsEnd = false;
-root.render(<Menu />);
+  globalMode = 'stopwatch';
+  timeIsEnd = false;
+  root.render(<Menu />);
 }
 
 function setModeTimer() {
-globalMode = 'timergym';
-timeIsEnd = false;
-root.render(<Menu />);
+  globalMode = 'timergym';
+  timeIsEnd = false;
+  root.render(<Menu />);
 }
 
 function resetTimeIsEnd() {
-timeIsEnd = false;
-root.render(<Menu />);
+  timeIsEnd = false;
+  root.render(<Menu />);
 }
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
-    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Таймер</button>
+    <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Stopwatch</button>
+    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Crossfit</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
@@ -371,9 +371,14 @@ export default class Whole extends React.Component {
         case 'open_stopwatch':
           return this.open_stopwatch(action);*/
         case 'start_stopwatch':
-            return TimerGym.handleStart();
+            TimerGym.handleStart();
+            break;
         case 'open_stopwatch':
-            return globalMode = 'stopwatch';
+            setModeStopwatch();
+            break;
+        case 'open_crossfit':
+            setModeTimer();
+            break;
         default:
           throw new Error();
       }
@@ -401,17 +406,10 @@ export default class Whole extends React.Component {
     })
   }
 
-  delete_note (action) {
-    console.log('delete_note', action);
-    this.setState({
-      notes: this.state.notes.filter(({ id }) => id !== action.id),
-    })
-  }
-
   render() {
     console.log('render');
     return (
-      <Menu/>
+      <Menu />
     )
   }
 }
