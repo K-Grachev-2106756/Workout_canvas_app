@@ -321,39 +321,6 @@ const initializeAssistant = (getState/*: any*/) => {
   return createAssistant({ getState });
 };
 
-function startStopwatchExternally() {
-  if (!stopwatchIsRunning) {
-    stopwatchIsRunning = true;
-    const startButton = document.getElementById('start');
-    startButton.click();
-  }
-}
-function stopStopwatchExternally() {
-  if (stopwatchIsRunning) {
-    stopwatchIsRunning = false;
-    const stopButton = document.getElementById('start');
-    stopButton.click();
-  }
-}
-function resetStopwatchExternally() {
-  const resetButton = document.getElementById('reset');
-  resetButton.click();
-}
-
-function startCrossfitExternally() {
-  const startButton = document.getElementById('start');
-  startButton.click();
-}
-function stopCrossfitExternally() {
-  const stopButton = document.getElementById('start');
-  stopButton.click();
-}
-function resetCrossfitExternally() {
-  const resetButton = document.getElementById('reset');
-  resetButton.click();
-}
-
-
 export class Whole extends React.Component {
 
   constructor(props) {
@@ -401,43 +368,84 @@ export class Whole extends React.Component {
     console.log('dispatchAssistantAction', action);
     if (action) {
       switch (action.type) {
+
         case 'open_stopwatch':
-          return setModeStopwatch();
+          setModeStopwatch();
+          break;
+
         case 'open_crossfit':
           stopwatchIsRunning = false;
-          return setModeTimer();
+          setModeTimer();
+          break;
+
         case 'start_stopwatch':
           if(globalMode==='timergym'){
             setModeStopwatch();
           }
-          return setTimeout(() => {
-            startStopwatchExternally();
-          }, 100);
+          /*setTimeout(() => {*/
+            this.startStopwatchExternally();
+          /*}, 100);*/
+          break;
+
         case 'start_crossfit':
           if(globalMode==='stopwatch'){
             setModeTimer();
           }
-          return setTimeout(() => {
-            startCrossfitExternally();
-          }, 100);
-        case 'stop_stopwatch':
-          stopStopwatchExternally();
+          /*setTimeout(() => {*/
+            this.startExternally();
+          /*}, 100);*/
           break;
+
+        case 'stop_stopwatch':
+          this.stopStopwatchExternally();
+        break;
+
         case 'reset_stopwatch':
           stopwatchIsRunning = false;
-          resetStopwatchExternally();
+          this.resetExternally();
           break;
         
         case 'stop_crossfit':
-          stopCrossfitExternally();
+          this.stopExternally();
           break;
+
         case 'reset_crossfit':
-          resetCrossfitExternally();
+          this.resetExternally();
           break;
+
         default:
           throw new Error();
       }
     }
+  }
+
+  startStopwatchExternally() {
+    if (!stopwatchIsRunning) {
+      stopwatchIsRunning = true;
+      this.startExternally()
+    }
+  }
+
+  stopStopwatchExternally() {
+    if (stopwatchIsRunning) {
+      stopwatchIsRunning = false;
+      this.stopExternally();
+    }
+  }
+
+  resetExternally() {
+    const resetButton = document.getElementById('reset');
+    resetButton.click();
+  }
+  
+  startExternally() {
+    const startButton = document.getElementById('start');
+    startButton.click();
+  }
+
+  stopExternally() {
+    const stopButton = document.getElementById('start');
+    stopButton.click();
   }
 
   render() {
