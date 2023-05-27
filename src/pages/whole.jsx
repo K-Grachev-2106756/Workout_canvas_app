@@ -31,6 +31,7 @@ const Stopwatch = () => {
   }, [timerInterval]);
 
   function startTimer() {
+      stopwatchIsRunning = true;
       setTimerInterval(setInterval(() => {
       setSeconds(s => {
           const newSeconds = s + 1;
@@ -51,11 +52,13 @@ const Stopwatch = () => {
   }
 
   function stopTimer() {
+      stopwatchIsRunning = false;
       clearInterval(timerInterval);
       setTimerInterval(null);
   }
 
   function resetTimer() {
+      stopwatchIsRunning = false;
       setSeconds(0);
       setMinutes(0);
       setHours(0);
@@ -195,7 +198,7 @@ const TimerGym = () => {
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" id = "reset" onClick={handleReset}>Сброс</button></div>
+          <div><button className = "button" id = "stop" onClick={handleReset}>Стоп</button></div>
           </table>
       </div>
       </div>
@@ -241,7 +244,7 @@ const TimerGym = () => {
       </div>
       <div className="controls">
           <div><button id = "start" className = "button" onClick={handleStart}>Старт</button></div>
-          <div><button id = "reset" className = "button" onClick={handleClear}>Стоп</button></div>
+          <div><button id = "reset" className = "button" onClick={handleClear}>Сброс</button></div>
       </div>
       </div>
 
@@ -258,11 +261,13 @@ return (
 
 function setModeStopwatch() {
   globalMode = 'stopwatch';
+  stopwatchIsRunning = false;
   timeIsEnd = false;
   root.render(<Menu />);
 }
 
 function setModeTimer() {
+  stopwatchIsRunning = false;
   globalMode = 'timergym';
   timeIsEnd = false;
   root.render(<Menu />);
@@ -374,39 +379,49 @@ export class Whole extends React.Component {
           break;
 
         case 'open_crossfit':
-          stopwatchIsRunning = false;
           setModeTimer();
           break;
 
         case 'start_stopwatch':
           if(globalMode==='timergym'){
             setModeStopwatch();
+          }  
+          if (!stopwatchIsRunning) {
+            stopwatchIsRunning = true;
+            setTimeout(() => {
+              this.startStopExternally();
+            }, 100);
           }
-          /*setTimeout(() => {*/
-            this.startStopwatchExternally();
-          /*}, 100);*/
           break;
-
-        case 'start_crossfit':
-          if(globalMode==='stopwatch'){
-            setModeTimer();
-          }
-          /*setTimeout(() => {*/
-            this.startExternally();
-          /*}, 100);*/
-          break;
-
+        
         case 'stop_stopwatch':
-          this.stopStopwatchExternally();
-        break;
+          if(globalMode==='timergym'){
+            break;
+          }  
+          if (stopwatchIsRunning) {
+            stopwatchIsRunning = false;
+            this.startStopExternally();
+          }
+          break;
+
+        case 'check_crossfit':
+          this.checkCrossfit();
+          break;
 
         case 'reset_stopwatch':
           stopwatchIsRunning = false;
           this.resetExternally();
           break;
-        
+
+        case 'start_crossfit':
+          this.startStopExternally();
+          break;
+
         case 'stop_crossfit':
-          this.stopExternally();
+          if(globalMode!=='timergym'){
+            break;
+          }  
+          this.startStopExternally();
           break;
 
         case 'reset_crossfit':
@@ -419,18 +434,39 @@ export class Whole extends React.Component {
     }
   }
 
-  startStopwatchExternally() {
-    if (!stopwatchIsRunning) {
-      stopwatchIsRunning = true;
-      this.startExternally()
-    }
+  _send_action_value(action_id, value) {
+    const data = {
+      action: {
+        action_id: action_id,
+        parameters: {   // значение поля parameters может любым, но должно соответствовать серверной логике
+          value: value, // см.файл src/sc/noteDone.sc смартаппа в Studio Code
+        }
+      }
+    };
+    const unsubscribe = this.assistant.sendData(
+      data,
+      (data) => {   // функция, вызываемая, если на sendData() был отправлен ответ
+        const {type, payload} = data;
+        console.log('sendData onData:', type, payload);
+        unsubscribe();
+      });
   }
 
-  stopStopwatchExternally() {
-    if (stopwatchIsRunning) {
-      stopwatchIsRunning = false;
-      this.stopExternally();
+  checkCrossfit() {
+    let flag = '';
+    if (globalMode === 'timergym'){
+      if ((document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')) {
+        flag = 'crossfit_all_right';
+      }
+      else {
+        flag = 'invalid_crossfit_input';
+      }
     }
+    else{
+      flag = 'invalid_crossfit_mode';
+    }
+    
+    this._send_action_value(flag, 123);
   }
 
   resetExternally() {
@@ -438,14 +474,11 @@ export class Whole extends React.Component {
     resetButton.click();
   }
   
-  startExternally() {
-    const startButton = document.getElementById('start');
-    startButton.click();
-  }
-
-  stopExternally() {
-    const stopButton = document.getElementById('start');
-    stopButton.click();
+  startStopExternally() {
+    setTimeout(() => {
+      const Button = document.getElementById('start');
+      Button.click();
+    }, 200);
   }
 
   render() {
