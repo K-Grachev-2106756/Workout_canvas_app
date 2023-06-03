@@ -196,7 +196,7 @@ const TimerGym = () => {
   }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
 
   const training_with_breaks_active = <div>
-      <div>
+      <div className='mode'>
         <div id='mode_work'>
           {(currentMode === 'WORK') ? 'тренировка' : ''}
         </div>
@@ -215,7 +215,7 @@ const TimerGym = () => {
   const training_with_breaks_input = <div>
       <div>
           <table className="inputs">
-          <tr id="time_name">
+          <tr id="textOver">
               <th colSpan={3}>тренировка</th>
           </tr>
           <tr>
@@ -228,7 +228,7 @@ const TimerGym = () => {
               </td>
           </tr>
           <tr id='space'></tr>
-          <tr id="time_name">
+          <tr id="textOver">
               <th colSpan={3}>отдых</th>
           </tr>
           
@@ -242,7 +242,7 @@ const TimerGym = () => {
               </td>
           </tr>
           <tr id='space'></tr>
-          <tr id="time_name">
+          <tr id="textOver">
               
               <th colSpan={3}>подходы</th>
           </tr>
