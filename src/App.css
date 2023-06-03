@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: 'digital-7';
   src: url('fonts/digital-7.ttf');
@@ -27,6 +28,13 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+}
 body {
   background-color: rgb(26, 26, 26);
   color: white;
@@ -35,109 +43,6 @@ body {
   overflow: none;
   justify-content: center;
   font-family: golos, BigTimer, open-sans;
-}
-
-@media only screen and (max-width: 730px) {
-  body {
-    font-size: 14px;
-  }
-  #message {
-    font-size: 5rem;
-  }
-  #main {
-    font-size: 3rem;
-  }
-  #separator {
-    font-size: 2.5rem;
-  }
-  #menu button {
-    font-size: 1.5rem;
-  }
-  #textOver {
-    font-size: 3rem;
-    padding-left: 0px;
-  }
-  #time {
-    font-size: 6rem;
-  }
-  #textOver th {
-    font-size: 1.5rem;
-  }
-  .button {
-    padding: 10px 20px;
-    font-size: 100%;
-    background-color: white;
-    color: black;
-    width: 10rem;
-    border: none;
-    border-radius: 0.8rem;
-    margin: 1.3rem;
-    cursor: pointer;
-    font-family: golos, raleway;
-  }
-  .controls {
-    flex-direction: column;
-    text-align: center;
-  }
-  .inputs {
-    max-width: 4rem;
-  }
-  .inputs input {
-    border-radius: 0.8rem;
-  }
-}
-@media only screen and (max-width: 390px) {
-  #time {
-    font-size: 4rem;
-  }
-  #message {
-    font-size: 3rem;
-  }
-}
-@media only screen and (min-width: 731px) {
-  body {
-    font-size: 16px;
-  }
-  #message {
-    font-size: 7rem;
-  }
-  #main {
-    font-size: 5rem;
-  }
-  #separator {
-    font-size: 4rem;
-  }
-  #menu button {
-    font-size: 2rem;
-  }
-  #textOver th {
-    font-size: 2rem;
-  }
-  #time {
-    font-size: 9rem;
-  }
-  #textOver th {
-    font-size: 2rem;
-  }
-  .controls {
-    display: flex;
-    justify-content: center;
-  }
-  .button {
-    padding: 10px 20px;
-    font-size: 4rem;
-    background-color: white;
-    color: black;
-    width: 20rem;
-    border: none;
-    border-radius: 0.8rem;
-    margin: 1.3rem;
-    cursor: pointer;
-    font-family: golos, raleway;
-  }
-  .inputs input {
-    border-radius: 1.2rem;
-  }
 }
 
 .controls {
@@ -150,6 +55,7 @@ body {
   text-align: center;
   color: rgb(218, 218, 218)
 }
+
 #menu {
   background-color: rgb(0, 0, 0);
   overflow: visible;
@@ -173,25 +79,21 @@ body {
 #separator {
   position: relative;
   vertical-align: middle;
-  margin: 0 0 10px 0;
-  padding: 0 0.6rem;
+  /* margin: 0 0 10px 0;
+  padding: 0 0.6rem; */
   color: rgb(218, 218, 218);
   align-items: center;
   text-align: center;
   font-family: golos, BigTimer, opensans;
 }
-#min_input_work,
-#sec_input_work,
-#min_input_chill,
-#sec_input_chill {
-  text-align: center;
-  min-width: 5rem;
-}
+
 #mode_work {
+  margin-top: 2rem;
   text-align: center;
   color:rgb(247, 67, 73)
 }
 #mode_chill {
+  margin-top: 2rem;
   text-align: center;
   color:rgb(45, 98, 255)
 }
@@ -200,13 +102,10 @@ body {
   text-align: center;
   color:rgb(218, 218, 218)
 }
-#rep_input {
-  text-align: center;
-  width: 10ch;
-}
+
 
 #menu button {
-  font-size: 1.7rem;
+  font-size: 3rem;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -252,14 +151,12 @@ th {
 
 .inputs {
   align-items: center;
-  
   margin-top: 1rem;
   width: fit-content;
   height: fit-content;
 }
 td.inputs {
   padding: 0;
-  /* height: auto; */
 }
 tr.inputs {
   height: auto;
@@ -272,12 +169,12 @@ td.min {
   color:rgb(218, 218, 218);
 }
 .inputs input {
-    text-align: center;
-    font-size: 60%;
-    color: rgb(218, 218, 218);
-    align-items: center;
-    background-color: rgb(26, 26, 26);
-    border: solid 0.2rem rgb(45, 98, 255);
+  text-align: center;
+  font-size: 60%;
+  color: rgb(218, 218, 218);
+  align-items: center;
+  background-color: rgb(26, 26, 26);
+  border: solid 0.2rem rgb(45, 98, 255);
 }
 .inputs input:focus-visible {
   border: solid 0.2rem rgb(218, 218, 218);
@@ -291,7 +188,6 @@ td.min {
   background-color: rgb(0, 0, 0);
   color: rgb(218, 218, 218);
 }
-
 #start:hover {
     background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
@@ -309,4 +205,251 @@ td.min {
   border: solid rgb(247, 67, 73);
   color: rgb(255, 255, 255);
   transition: color 0.3s;
+}
+
+@media only screen and (max-width: 799px) and (orientation:landscape){
+  body {
+    font-size: 14px;
+  }
+  #mode {
+    font-size: 10rem;
+  }
+  #min_input_work,
+  #sec_input_work,
+  #min_input_chill,
+  #sec_input_chill,
+  #rep_input {
+    text-align: center;
+    width: 6rem;
+  }
+
+  #message {
+    font-size: 5rem;
+  }
+  #main {
+    font-size: 3rem;
+  }
+  #separator {
+    font-size: 2.5rem;
+  }
+  #menu button {
+    font-size: 1.5rem;
+  }
+  #textOver {
+    font-size: 3rem;
+    padding-left: 0px;
+  }
+  #time {
+    margin-top: 1rem;
+    font-size: 6rem;
+  }
+  #textOver th {
+    font-size: 1.5rem;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 100%;
+    background-color: white;
+    color: black;
+    width: 10rem;
+    border: none;
+    border-radius: 0.8rem;
+    margin: 1.3rem;
+    cursor: pointer;
+    font-family: golos, raleway;
+  }
+  .controls {
+    text-align: center;
+  }
+  .inputs {
+    max-width: 4rem;
+  }
+  .inputs input {
+    border-radius: 0.8rem;
+    border: solid 0.17rem rgb(45, 98, 255);
+    font-size: 80%;
+  }
+}
+@media only screen and (max-width: 799px) and (orientation:portrait){
+  body {
+    font-size: 20px;
+  }
+  #min_input_work,
+  #sec_input_work,
+  #min_input_chill,
+  #sec_input_chill,
+  #rep_input {
+    text-align: center;
+    width: 6rem;
+  }
+  .mode {
+    font-size: 2rem;
+  }
+  #message {
+    font-size: 5rem;
+  }
+  #main {
+    font-size: 3rem;
+  }
+  #separator {
+    font-size: 2.5rem;
+  }
+  #menu button {
+    font-size: 1.5rem;
+  }
+  #textOver {
+    font-size: 3rem;
+    padding-left: 0px;
+  }
+  #time {
+    margin-top: 1rem;
+    font-size: 6rem;
+  }
+  #textOver th {
+    font-size: 1.5rem;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 100%;
+    background-color: white;
+    color: black;
+    width: 10rem;
+    border: none;
+    border-radius: 0.8rem;
+    margin: 1.3rem;
+    cursor: pointer;
+    font-family: golos, raleway;
+  }
+  .controls {
+    flex-direction: column;
+    text-align: center;
+  }
+  .inputs {
+    max-width: 4rem;
+  }
+  .inputs input {
+    border-radius: 0.8rem;
+    border: solid 0.17rem rgb(45, 98, 255);
+    font-size: 80%;
+  }
+}
+
+@media only screen and (min-width: 800px) and (orientation:landscape){
+  body {
+    font-size: 22px;
+  }
+  #menu button {
+    font-size: 3rem;
+  }
+  .mode {
+    font-size: 3rem;
+  }
+  #min_input_work,
+  #sec_input_work,
+  #min_input_chill,
+  #sec_input_chill,
+  #rep_input
+   {
+    text-align: center;
+    width: 12rem;
+    font-size: 4rem;
+  }
+
+  #message {
+    font-size: 7rem;
+  }
+
+  #separator {
+    font-size: 5rem;
+  }
+  #textOver th {
+    font-size: 2.5rem;
+  }
+  #time {
+    margin-top: 1rem;
+    font-size: 9rem;
+  }
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 5rem;
+    background-color: white;
+    color: black;
+    width: 23rem;
+    border: none;
+    border-radius: 0.8rem;
+    margin: 1.3rem;
+    cursor: pointer;
+    font-family: golos, raleway;
+  }
+  .inputs input {
+    border-radius: 1.2rem;
+    border: solid 0.2rem rgb(45, 98, 255);
+    font-size: 75%;
+  }
+}
+@media only screen and (min-width: 800px) and (orientation:portrait){
+  body {
+    font-size: 22px;
+  }
+  #menu {
+    margin-bottom: 8rem;
+  }
+  .mode {
+    font-size: 3rem;
+  }
+  #menu button {
+    font-size: 3rem;
+  }
+  #rep_left {
+    font-size: 10rem;
+  }
+  #min_input_work,
+  #sec_input_work,
+  #min_input_chill,
+  #sec_input_chill,
+  #rep_input {
+    text-align: center;
+    width: 12rem;
+    font-size: 4rem;
+  }
+  #message {
+    font-size: 7rem;
+  }
+
+  #separator {
+    font-size: 5rem;
+  }
+
+  #time {
+    margin-top: 1rem;
+    font-size: 9rem;
+  }
+  #textOver th {
+    font-size: 2.5rem;
+  }
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 5rem;
+    background-color: white;
+    color: black;
+    width: 23rem;
+    border: none;
+    border-radius: 0.8rem;
+    margin: 1.3rem;
+    cursor: pointer;
+    font-family: golos, raleway;
+  }
+  .inputs input {
+    border-radius: 1.2rem;
+    border: solid 0.2rem rgb(45, 98, 255);
+    font-size: 75%;
+  }
 }

@@ -21,64 +21,66 @@ function div(val, by){
 }
 
 const Stopwatch = () => {
-  const [timerInterval, setTimerInterval] = useState(null);
-  let [seconds, setSeconds] = useState(0);
-  let [minutes, setMinutes] = useState(0);
-  let [hours, setHours] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
-      return () => clearInterval(timerInterval);
-  }, [timerInterval]);
+    let intervalId;
+    if (isRunning) {
+      intervalId = setInterval(() => {
+        const now = Date.now();
+        setElapsedTime(now - startTime);
+      }, 10);
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isRunning, startTime]);
 
-  function startTimer() {
-      stopwatchIsRunning = true;
-      setTimerInterval(setInterval(() => {
-      setSeconds(s => {
-          const newSeconds = s + 1;
-          if (newSeconds >= 60) {
-          setMinutes(m => {
-              const newMinutes = m + Math.floor(newSeconds / 60);
-              if (newMinutes >= 60) {
-              setHours(h => h + Math.floor(newMinutes / 60));
-              return newMinutes % 60;
-              }
-              return newMinutes;
-          });
-          return newSeconds % 60;
-          }
-          return newSeconds;
-      });
-      }, 1000));
-  }
+  const handleStart = () => {
+    setIsRunning(true);
+    setStartTime(Date.now() - elapsedTime);
+  };
 
-  function stopTimer() {
-      stopwatchIsRunning = false;
-      clearInterval(timerInterval);
-      setTimerInterval(null);
-  }
+  const handlePause = () => {
+    setIsRunning(false);
+  };
 
-  function resetTimer() {
-      stopwatchIsRunning = false;
-      setSeconds(0);
-      setMinutes(0);
-      setHours(0);
-      stopTimer();
-  }
+  const handleReset = () => {
+    setIsRunning(false);
+    setElapsedTime(0);
+  };
 
-  function pad(num) {
-      return num < 10 ? "0" + num : num;
-  }
+  const formatTime = (time) => {
+    const milliseconds = Math.floor((time % 1000) / 10);
+    const seconds = Math.floor((time / 1000) % 60);
+    const minutes = Math.floor((time / 1000 / 60) % 60);
 
+    return (
+      ("0" + minutes).slice(-2) +
+      ":" +
+      ("0" + seconds).slice(-2) +
+      ":" +
+      ("0" + milliseconds).slice(-2)
+    );
+  };
   return (
-      <div id="main">
-      <div id="time">
-          {pad(hours)}:{pad(minutes)}:{pad(seconds)}
-      </div>
+    <div id="main">
+      <div id="time">{formatTime(elapsedTime)}</div>
       <div className="controls">
-          <div><button id="start" className="button" onClick={timerInterval ? stopTimer : startTimer}>{timerInterval ? "Стоп" : "Старт"}</button></div>
-          <div><button id="reset" className="button" onClick={resetTimer}>Сброс</button></div>
+      <div>
+          <button id="start" className="button" onClick={isRunning ? handlePause : handleStart}>
+            {isRunning ? 'Stop' : 'Start'}
+          </button>
+        </div>
+        <div>
+          <button id="reset" className="button" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
       </div>
-      </div>
+    </div>
   );
 };
 
@@ -267,8 +269,8 @@ function setModeStopwatch() {
 }
 
 function setModeTimer() {
-  stopwatchIsRunning = false;
   globalMode = 'timergym';
+  stopwatchIsRunning = false;
   timeIsEnd = false;
   root.render(<Menu />);
 }
@@ -276,6 +278,16 @@ function setModeTimer() {
 function resetTimeIsEnd() {
   timeIsEnd = false;
   root.render(<Menu />);
+}
+
+function resetExternally() {
+  const resetButton = document.getElementById('reset');
+  resetButton.click();
+}
+
+function startStopExternally() {
+  const Button = document.getElementById('start');
+  Button.click();
 }
 
 const Menu = () => {
@@ -375,57 +387,59 @@ export class Whole extends React.Component {
       switch (action.type) {
 
         case 'open_stopwatch':
+          console.log('open_stopwatch', action);
           setModeStopwatch();
           break;
 
         case 'open_crossfit':
+          //console.log('open_crossfit', action);
           setModeTimer();
           break;
 
         case 'start_stopwatch':
+          //console.log('start_stopwatch', action);
           if(globalMode==='timergym'){
             setModeStopwatch();
           }  
-          if (!stopwatchIsRunning) {
-            stopwatchIsRunning = true;
+          if (stopwatchIsRunning !== true) {
+            //stopwatchIsRunning = true;
             setTimeout(() => {
-              this.startStopExternally();
+              startStopExternally();
             }, 100);
           }
           break;
         
-        case 'stop_stopwatch':
-          if(globalMode==='timergym'){
-            break;
-          }  
-          if (stopwatchIsRunning) {
-            stopwatchIsRunning = false;
-            this.startStopExternally();
+        case 'stoppause':
+          //console.log('stop', action);
+          if ((globalMode === 'stopwatch' && stopwatchIsRunning===true) | (globalMode==='timergym' && timeIsEnd === true)) {
+            //stopwatchIsRunning = false;
+            //timeIsEnd = false;
+            startStopExternally();
           }
           break;
 
+        case 'check_mode_s':
+          this.checkModeStopwatch();
+          break;  
+        
+        case 'check_mode_c': 
+          this.checkModeCrossfit();
+          break;
+          
+        case 'reset':
+          console.log('reset', action);
+          //stopwatchIsRunning = false;
+          resetExternally();
+          break;
+        
         case 'check_crossfit':
+          //console.log('check_crossfit', action);
           this.checkCrossfit();
           break;
 
-        case 'reset_stopwatch':
-          stopwatchIsRunning = false;
-          this.resetExternally();
-          break;
-
         case 'start_crossfit':
-          this.startStopExternally();
-          break;
-
-        case 'stop_crossfit':
-          if(globalMode!=='timergym'){
-            break;
-          }  
-          this.startStopExternally();
-          break;
-
-        case 'reset_crossfit':
-          this.resetExternally();
+          //console.log('start_crossfit', action);
+          startStopExternally();
           break;
 
         default:
@@ -434,15 +448,14 @@ export class Whole extends React.Component {
     }
   }
 
-  _send_action_value(action_id, value) {
+  _send_action_value(action_id) {
     const data = {
       action: {
         action_id: action_id,
-        parameters: {   // значение поля parameters может любым, но должно соответствовать серверной логике
-          value: value, // см.файл src/sc/noteDone.sc смартаппа в Studio Code
-        }
+        parameters: {}
       }
     };
+
     const unsubscribe = this.assistant.sendData(
       data,
       (data) => {   // функция, вызываемая, если на sendData() был отправлен ответ
@@ -451,34 +464,42 @@ export class Whole extends React.Component {
         unsubscribe();
       });
   }
+  
+  checkModeStopwatch(){
+    let flag = '';
+    if (globalMode === 'stopwatch'){
+      flag = 'already';
+    }
+    else{
+      flag = 'mode_is_not_stopwatch';
+    }
+    
+    this._send_action_value(flag);
+  }
+
+  checkModeCrossfit(){
+    let flag = '';
+    if (globalMode === 'timergym'){
+      flag = 'already';
+    }
+    else{
+      flag = 'mode_is_not_crossfit';
+    }
+    
+    this._send_action_value(flag);
+  }
 
   checkCrossfit() {
     let flag = '';
-    if (globalMode === 'timergym'){
-      if ((document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')) {
-        flag = 'crossfit_all_right';
-      }
-      else {
-        flag = 'invalid_crossfit_input';
-      }
+    if (globalMode === 'timergym' && (document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')){
+      flag = 'crossfit_all_right';
     }
     else{
-      flag = 'invalid_crossfit_mode';
+      setModeTimer();
+      flag = 'invalid_crossfit_input';
     }
     
-    this._send_action_value(flag, 123);
-  }
-
-  resetExternally() {
-    const resetButton = document.getElementById('reset');
-    resetButton.click();
-  }
-  
-  startStopExternally() {
-    setTimeout(() => {
-      const Button = document.getElementById('start');
-      Button.click();
-    }, 200);
+    this._send_action_value(flag);
   }
 
   render() {
