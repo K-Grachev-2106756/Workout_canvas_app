@@ -9,6 +9,7 @@ const root = createRoot(document.getElementById('root'));
 let globalMode = 'stopwatch';
 let timeIsEnd = false;
 let stopwatchIsRunning = false;
+let timerIsRunning = false;
 
 const formatTime = (time) => {
   const minutes = Math.floor(time / 60).toString().padStart(2, '0');
@@ -39,15 +40,18 @@ const Stopwatch = () => {
   }, [isRunning, startTime]);
 
   const handleStart = () => {
+    stopwatchIsRunning = true;
     setIsRunning(true);
     setStartTime(Date.now() - elapsedTime);
   };
 
   const handlePause = () => {
+    stopwatchIsRunning = false;
     setIsRunning(false);
   };
 
   const handleReset = () => {
+    stopwatchIsRunning = false;
     setIsRunning(false);
     setElapsedTime(0);
   };
@@ -71,12 +75,12 @@ const Stopwatch = () => {
       <div className="controls">
       <div>
           <button id="start" className="button" onClick={isRunning ? handlePause : handleStart}>
-            {isRunning ? 'Stop' : 'Start'}
+            {isRunning ? 'Стоп' : 'Старт'}
           </button>
         </div>
         <div>
           <button id="reset" className="button" onClick={handleReset}>
-            Reset
+            Сброс
           </button>
         </div>
       </div>
@@ -93,6 +97,7 @@ const TimerGym = () => {
     const [timeLeft, setTimeLeft] = useState(0);
 
     const handleStart = () => {
+        timerIsRunning = true;
         const rawWorkMin = Math.abs(parseInt(document.getElementById('min_input_work').value)) || 0;
         const rawWorkSec = Math.abs(parseInt(document.getElementById('sec_input_work').value)) || 0;
         const rawChillMin = Math.abs(parseInt(document.getElementById('min_input_chill').value)) || 0;
@@ -117,6 +122,7 @@ const TimerGym = () => {
         setTimeLeft(workMin * 60 + workSec);
     };
     const handleReset = () => {
+        timerIsRunning = false;
         setIsRunning(false);
         setWorkTimeConst(0);
         setChillTimeConst(0);
@@ -125,6 +131,7 @@ const TimerGym = () => {
         setTimeLeft(0);
     };
     const handleClear = () => {
+        timerIsRunning = false;
         document.getElementById('min_input_work').value = '';
         document.getElementById('min_input_chill').value = '';
         document.getElementById('sec_input_work').value = '';
@@ -154,6 +161,7 @@ const TimerGym = () => {
                 setRepToEnd((prevRepToEnd) => prevRepToEnd - 1);
             } else {
                 timeIsEnd = true;
+                timerIsRunning = false;
                 root.render(<Menu />)
                 setIsRunning(false);
             }
@@ -200,7 +208,7 @@ const TimerGym = () => {
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" id = "stop" onClick={handleReset}>Стоп</button></div>
+          <div><button className = "button" id = "start" onClick={handleReset}>Стоп</button></div>
           </table>
       </div>
       </div>
@@ -264,14 +272,14 @@ return (
 function setModeStopwatch() {
   globalMode = 'stopwatch';
   stopwatchIsRunning = false;
-  timeIsEnd = false;
+  timerIsRunning = false;
   root.render(<Menu />);
 }
 
 function setModeTimer() {
   globalMode = 'timergym';
   stopwatchIsRunning = false;
-  timeIsEnd = false;
+  timerIsRunning = false;
   root.render(<Menu />);
 }
 
@@ -293,7 +301,7 @@ function startStopExternally() {
 const Menu = () => {
   const menu = <div id="menu">
     <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
-    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кросфит</button>
+    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кроссфит</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
@@ -387,33 +395,21 @@ export class Whole extends React.Component {
       switch (action.type) {
 
         case 'open_stopwatch':
-          console.log('open_stopwatch', action);
           setModeStopwatch();
           break;
 
         case 'open_crossfit':
-          //console.log('open_crossfit', action);
           setModeTimer();
           break;
 
         case 'start_stopwatch':
-          //console.log('start_stopwatch', action);
-          if(globalMode==='timergym'){
-            setModeStopwatch();
-          }  
-          if (stopwatchIsRunning !== true) {
-            //stopwatchIsRunning = true;
             setTimeout(() => {
               startStopExternally();
             }, 100);
-          }
           break;
         
         case 'stoppause':
-          //console.log('stop', action);
-          if ((globalMode === 'stopwatch' && stopwatchIsRunning===true) | (globalMode==='timergym' && timeIsEnd === true)) {
-            //stopwatchIsRunning = false;
-            //timeIsEnd = false;
+          if ((globalMode === 'stopwatch' && stopwatchIsRunning===true) | (globalMode==='timergym' && timerIsRunning === true)) {
             startStopExternally();
           }
           break;
@@ -428,17 +424,18 @@ export class Whole extends React.Component {
           
         case 'reset':
           console.log('reset', action);
-          //stopwatchIsRunning = false;
           resetExternally();
           break;
         
         case 'check_crossfit':
-          //console.log('check_crossfit', action);
           this.checkCrossfit();
           break;
 
+        case 'check_stopwatch':
+          this.checkStopwatch();
+          break;
+
         case 'start_crossfit':
-          //console.log('start_crossfit', action);
           startStopExternally();
           break;
 
@@ -491,12 +488,34 @@ export class Whole extends React.Component {
 
   checkCrossfit() {
     let flag = '';
-    if (globalMode === 'timergym' && (document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')){
-      flag = 'crossfit_all_right';
+    if (globalMode === 'timergym'){
+      if(timerIsRunning===true){
+        flag = 'already_running';
+      }
+      else {
+        if ((document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')){
+          flag = 'crossfit_all_right';
+        }
+      }
     }
     else{
       setModeTimer();
       flag = 'invalid_crossfit_input';
+    }
+    
+    this._send_action_value(flag);
+  }
+
+  checkStopwatch() {
+    let flag = '';
+    if (stopwatchIsRunning === false) {
+      if(globalMode === 'timergym'){
+        setModeStopwatch();
+      }
+      flag = 'is_not_running';
+    }
+    else{
+      flag = 'already_running';
     }
     
     this._send_action_value(flag);
