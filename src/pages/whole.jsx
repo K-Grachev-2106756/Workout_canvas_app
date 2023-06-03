@@ -17,9 +17,6 @@ const formatTime = (time) => {
   return `${minutes}:${seconds}`;
 };
 
-function div(val, by){
-  return (val - val % by) / by;
-}
 
 const Stopwatch = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -96,30 +93,54 @@ const TimerGym = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
 
-    const handleStart = () => {
-        timerIsRunning = true;
-        const rawWorkMin = Math.abs(parseInt(document.getElementById('min_input_work').value)) || 0;
-        const rawWorkSec = Math.abs(parseInt(document.getElementById('sec_input_work').value)) || 0;
-        const rawChillMin = Math.abs(parseInt(document.getElementById('min_input_chill').value)) || 0;
-        const rawChillSec = Math.abs(parseInt(document.getElementById('sec_input_chill').value)) || 0;
-        
-        const workMin = rawWorkMin + div(rawWorkSec, 60)
-        const workSec = rawWorkSec % 60
-        const chillMin = rawChillMin + div(rawChillSec, 60)
-        const chillSec = rawChillSec % 60
-        if (workMin + workSec === 0) {
-        return;
-        }
-        // Save the constants for later use
-        setWorkTimeConst(workMin * 60 + workSec);
-        setChillTimeConst(chillMin * 60 + chillSec);
-        setRepToEnd(parseInt(document.getElementById('rep_input').value) || 1);
-        setRepToEnd((prevRepToEnd) => prevRepToEnd);
+    const handleChange = (event) => {
+      const { id, value } = event.target;
+      
+      if (id === 'min_input_work' || id === 'sec_input_work') {
+        const rawWorkMin = document.getElementById('min_input_work');
+        const rawWorkSec = document.getElementById('sec_input_work');
+        rawWorkMin.value = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_work').value))) || '00';
+        rawWorkSec.value = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_work').value))) || '00';
+        rawWorkMin.value = rawWorkMin.value.padStart(2, '0');
+        rawWorkSec.value = rawWorkSec.value.padStart(2, '0');
+      } else if (id === 'min_input_chill' || id === 'sec_input_chill') {
+        const rawChillMin = document.getElementById('min_input_chill');
+        const rawChillSec = document.getElementById('sec_input_chill');
+        rawChillMin.value = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_chill').value))) || '00';
+        rawChillSec.value = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_chill').value))) || '00';
+        rawChillMin.value = rawChillMin.value.padStart(2, '0');
+        rawChillSec.value = rawChillSec.value.padStart(2, '0');
 
-        // Set the initial state
-        setCurrentMode('WORK');
-        setIsRunning(true);
-        setTimeLeft(workMin * 60 + workSec);
+      } else if (id === 'rep_input') {
+        setRepToEnd(parseInt(value) || 1);
+        const rawRepLeft = document.getElementById('rep_input');
+        rawRepLeft.value = Math.max(1, parseInt(rawRepLeft.value));
+        rawRepLeft.value = Math.min(100, parseInt(rawRepLeft.value));
+      }
+    };
+
+    const handleStart = () => {
+      timerIsRunning = true;
+      const rawWorkMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_work').value))) || 0;
+      const rawWorkSec = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_work').value))) || 0;
+      const rawChillMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_chill').value))) || 0;
+      const rawChillSec = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_chill').value))) || 0;
+  
+      const workMin = rawWorkMin + Math.floor(rawWorkSec / 60);
+      const workSec = rawWorkSec % 60;
+      const chillMin = rawChillMin + Math.floor(rawChillSec / 60);
+      const chillSec = rawChillSec % 60;
+  
+      // Save the constants for later use
+      setWorkTimeConst(workMin * 60 + workSec);
+      setChillTimeConst(chillMin * 60 + chillSec);
+      setRepToEnd(parseInt(document.getElementById('rep_input').value) || 1);
+      setRepToEnd((prevRepToEnd) => prevRepToEnd);
+  
+      // Set the initial state
+      setCurrentMode('WORK');
+      setIsRunning(true);
+      setTimeLeft(workMin * 60 + workSec);
     };
     const handleReset = () => {
         timerIsRunning = false;
@@ -220,11 +241,11 @@ const TimerGym = () => {
           </tr>
           <tr>
               <td>
-              <input type="number" id="min_input_work" min="0" max="59" placeholder="00" />
+              <input type="number" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" id="sec_input_work" min="0" max="59" placeholder="00" />
+              <input type="number" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -234,11 +255,11 @@ const TimerGym = () => {
           
           <tr>
               <td>
-              <input type="number" id="min_input_chill" min="0" max="59" placeholder="00" />
+              <input type="number" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" id="sec_input_chill" min="0" max="59" placeholder="00" />
+              <input type="number" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -248,7 +269,7 @@ const TimerGym = () => {
           </tr>
           
           <tr >
-              <td colSpan="3"><input type="number" id="rep_input" placeholder="1" /></td>
+              <td colSpan="3"><input type="number" id="rep_input" onChange={handleChange} placeholder="1" /></td>
           </tr>
           </table> 
       </div>
