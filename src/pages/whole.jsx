@@ -23,6 +23,7 @@ const Stopwatch = () => {
   const [startTime, setStartTime] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
 
+  
   useEffect(() => {
     let intervalId;
     if (isRunning) {
@@ -93,6 +94,25 @@ const TimerGym = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
 
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+        }
+      };
+  
+      const numberInputs = document.querySelectorAll('input[type="number"]');
+      numberInputs.forEach((input) => {
+        input.addEventListener('keydown', handleKeyDown);
+      });
+  
+      // Cleanup event listeners
+      return () => {
+        numberInputs.forEach((input) => {
+          input.removeEventListener('keydown', handleKeyDown);
+        });
+      };
+    }, []);
     const handleChange = (event) => {
       const { id, value } = event.target;
       
@@ -120,27 +140,33 @@ const TimerGym = () => {
     };
 
     const handleStart = () => {
-      timerIsRunning = true;
+      
+      
       const rawWorkMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_work').value))) || 0;
       const rawWorkSec = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_work').value))) || 0;
       const rawChillMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_chill').value))) || 0;
       const rawChillSec = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_chill').value))) || 0;
-  
-      const workMin = rawWorkMin + Math.floor(rawWorkSec / 60);
-      const workSec = rawWorkSec % 60;
-      const chillMin = rawChillMin + Math.floor(rawChillSec / 60);
-      const chillSec = rawChillSec % 60;
-  
-      // Save the constants for later use
-      setWorkTimeConst(workMin * 60 + workSec);
-      setChillTimeConst(chillMin * 60 + chillSec);
-      setRepToEnd(parseInt(document.getElementById('rep_input').value) || 1);
-      setRepToEnd((prevRepToEnd) => prevRepToEnd);
-  
-      // Set the initial state
-      setCurrentMode('WORK');
-      setIsRunning(true);
-      setTimeLeft(workMin * 60 + workSec);
+      
+      if ((rawWorkMin + rawWorkSec) !== 0) {
+        timerIsRunning = true;
+        const workMin = rawWorkMin + Math.floor(rawWorkSec / 60);
+        const workSec = rawWorkSec % 60;
+        const chillMin = rawChillMin + Math.floor(rawChillSec / 60);
+        const chillSec = rawChillSec % 60;
+    
+        // Save the constants for later use
+        setWorkTimeConst(workMin * 60 + workSec);
+        setChillTimeConst(chillMin * 60 + chillSec);
+        setRepToEnd(parseInt(document.getElementById('rep_input').value) || 1);
+        setRepToEnd((prevRepToEnd) => prevRepToEnd);
+    
+        // Set the initial state
+        setCurrentMode('WORK');
+        setIsRunning(true);
+        setTimeLeft(workMin * 60 + workSec);
+      }
+
+      
     };
     const handleReset = () => {
         timerIsRunning = false;
@@ -214,7 +240,7 @@ const TimerGym = () => {
     return () => {
     clearInterval(timer);
     };
-  }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
+    }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
 
   const training_with_breaks_active = <div>
       <div className='mode'>
@@ -229,7 +255,7 @@ const TimerGym = () => {
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" id = "start" onClick={handleReset}>Стоп</button></div>
+          <div><button className = "button" tabindex="1" id = "start" onClick={handleReset}>Стоп</button></div>
           </table>
       </div>
       </div>
@@ -241,11 +267,11 @@ const TimerGym = () => {
           </tr>
           <tr>
               <td>
-              <input type="number" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="1" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="2" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -255,11 +281,11 @@ const TimerGym = () => {
           
           <tr>
               <td>
-              <input type="number" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="3" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="4" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -269,13 +295,13 @@ const TimerGym = () => {
           </tr>
           
           <tr >
-              <td colSpan="3"><input type="number" id="rep_input" onChange={handleChange} placeholder="1" /></td>
+              <td colSpan="3"><input type="number" tabindex="5" id="rep_input" onChange={handleChange} placeholder="1" /></td>
           </tr>
           </table> 
       </div>
       <div className="controls">
-          <div><button id = "start" className = "button" onClick={handleStart}>Старт</button></div>
-          <div><button id = "reset" className = "button" onClick={handleClear}>Сброс</button></div>
+          <div><button id = "start" tabindex="6" className = "button" onClick={handleStart}>Старт</button></div>
+          <div><button id = "reset" tabindex="7" className = "button" onClick={handleClear}>Сброс</button></div>
       </div>
       </div>
 
@@ -321,8 +347,8 @@ function startStopExternally() {
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
-    <button id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кроссфит</button>
+    <button tabindex="8" id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
+    <button tabindex="9" id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кроссфит</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
