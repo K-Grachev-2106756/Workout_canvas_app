@@ -35,6 +35,9 @@ input[type="number"]:hover,
 input[type="number"]:focus {
   -moz-appearance: number-input;
 }
+input[type=number] {
+  -moz-appearance: textfield;
+}
 body {
   background-color: rgb(26, 26, 26);
   color: white;
@@ -113,17 +116,31 @@ body {
   outline: none;
   color: rgb(218, 218, 218);
   background-color: transparent;
+  border-top: solid 0.2rem rgb(0, 0, 0);
   transition: background-color 0.3s;
 }
 
-#menu button:hover {
+#menu button:focus-within,
+#menu button#selected:focus-within {
   color: rgb(255, 255, 255);
-  transition: color 0.5s;
+  border-top: solid 0.2rem rgb(255, 255, 255);
+  border-color: aliceblue;
+  transition: all 0.3s;
 }
 
 #menu button#selected {
+  background-color: rgb(26, 26, 26);
+  border-top:solid 0.2rem rgb(26, 26, 26) ;
+}
+#menu button:hover {
   color: rgb(255, 255, 255);
-  background-color: rgba(255, 255, 255, 0.1);
+  border-top: solid 0.2rem rgb(255, 255, 255);
+  border-color: aliceblue;
+  transition: all 0.3s;
+}
+#menu button#selected:hover {
+  background-color: rgb(26, 26, 26);
+  border-top: solid 0.2rem rgb(255, 255, 255);
 }
 
 table {
@@ -188,30 +205,34 @@ td.min {
   background-color: rgb(0, 0, 0);
   color: rgb(218, 218, 218);
 }
+#start:focus-within,
 #start:hover {
-    background-color: rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
-  border: solid rgb(45, 98, 255);
-  transition: color 0.3s;
+  border: solid rgb(45, 98, 255); 
+  transition: all 0.3s;
 }
 
 #reset {
-    background-color: rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
   border: solid rgb(0, 0, 0);
   color: rgb(218, 218, 218);
 }
-#reset:hover {
-    background-color: rgb(0, 0, 0);
+#reset:hover,
+#reset:focus-within      {
+  background-color: rgb(0, 0, 0);
   border: solid rgb(247, 67, 73);
   color: rgb(255, 255, 255);
-  transition: color 0.3s;
+  transition: all 0.3s;
 }
-
+button:focus-within    {
+  outline: none;
+}
 @media only screen and (max-width: 799px) and (orientation:landscape){
   body {
     font-size: 14px;
   }
-  #mode {
+  .mode {
     font-size: 10rem;
   }
   #min_input_work,
