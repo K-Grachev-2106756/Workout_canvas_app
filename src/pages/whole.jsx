@@ -244,11 +244,8 @@ const TimerGym = () => {
 
   const training_with_breaks_active = <div>
       <div className='mode'>
-        <div id='mode_work'>
-          {(currentMode === 'WORK') ? 'тренировка' : ''}
-        </div>
-        <div id='mode_chill'>
-          {(currentMode === 'CHILL') ? 'отдых' : ''}
+        <div id={currentMode === 'WORK' ? 'mode_work' : 'mode_chill'}>
+          {(currentMode === 'WORK') ? 'тренировка' : 'отдых'}
         </div>
           <div id = "time">{formatTime(timeLeft)}</div>
           <div id="repLeft">Подходов осталось: {repToEnd}</div>
