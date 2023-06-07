@@ -1,5 +1,5 @@
 {
-  "name": "crossfit-app",
+  "name": "my-crossfit-timer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
