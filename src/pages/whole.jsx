@@ -165,8 +165,6 @@ const TimerGym = () => {
         setIsRunning(true);
         setTimeLeft(workMin * 60 + workSec);
       }
-
-      
     };
     const handleReset = () => {
         timerIsRunning = false;
@@ -247,12 +245,12 @@ const TimerGym = () => {
         <div id={currentMode === 'WORK' ? 'mode_work' : 'mode_chill'}>
           {(currentMode === 'WORK') ? 'тренировка' : 'отдых'}
         </div>
-          <div id = "time">{formatTime(timeLeft)}</div>
-          <div id="repLeft">Подходов осталось: {repToEnd}</div>
+        <div id = "time">{formatTime(timeLeft)}</div>
+        <div id="repLeft">Подходов осталось: {repToEnd}</div>
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" tabindex="1" id = "start" onClick={handleReset}>Стоп</button></div>
+          <div><button className = "button" tabindex="3" id = "start" onClick={handleReset}>Стоп</button></div>
           </table>
       </div>
       </div>
@@ -264,11 +262,11 @@ const TimerGym = () => {
           </tr>
           <tr>
               <td>
-              <input type="number" tabindex="1" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="3" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" tabindex="2" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="4" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -278,11 +276,11 @@ const TimerGym = () => {
           
           <tr>
               <td>
-              <input type="number" tabindex="3" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="5" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" tabindex="4" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input type="number" tabindex="6" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
@@ -292,13 +290,13 @@ const TimerGym = () => {
           </tr>
           
           <tr >
-              <td colSpan="3"><input type="number" tabindex="5" id="rep_input" onChange={handleChange} placeholder="1" /></td>
+              <td colSpan="3"><input type="number" tabindex="7" id="rep_input" onChange={handleChange} placeholder="1" /></td>
           </tr>
           </table> 
       </div>
       <div className="controls">
-          <div><button id = "start" tabindex="6" className = "button" onClick={handleStart}>Старт</button></div>
-          <div><button id = "reset" tabindex="7" className = "button" onClick={handleClear}>Сброс</button></div>
+          <div><button id = "start" tabindex="8" className = "button" onClick={handleStart}>Старт</button></div>
+          <div><button id = "reset" tabindex="9" className = "button" onClick={handleClear}>Сброс</button></div>
       </div>
       </div>
 
@@ -344,8 +342,8 @@ function startStopExternally() {
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button tabindex="8" id={globalMode === 'stopwatch' ? 'selected' : ''} onClick={setModeStopwatch}>Секундомер</button>
-    <button tabindex="9" id={globalMode === 'timergym' ? 'selected' : ''} onClick={setModeTimer}>Кроссфит</button>
+    <button tabindex="1" id={globalMode === 'stopwatch' ? 'selected' : 'unselected'} onClick={setModeStopwatch}>Секундомер</button>
+    <button tabindex="2" id={globalMode === 'timergym' ? 'selected' : 'unselected'} onClick={setModeTimer}>Кроссфит</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
@@ -356,7 +354,7 @@ const Menu = () => {
         <div className="controls">
           
           <table>
-            <div className='controls'><button id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
+            <div className='controls'><button tabindex="3" id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
           </table>
         </div>
       </>
