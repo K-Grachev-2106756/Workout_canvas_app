@@ -103,27 +103,9 @@ const TimerGym = () => {
     const platTimerEndSound = () => {
       audio.current = new Audio(timerEndSound);
       audio.current.play();
-      // audio.current.pause();
+
     }
-    // useEffect(() => {
-    //   const handleKeyDown = (event) => {
-    //     if (event.key === 'ArrowUp') {
-    //       event.preventDefault();
-    //     }
-    //   };
-  
-    //   const numberInputs = document.querySelectorAll('input[type="number"]');
-    //   numberInputs.forEach((input) => {
-    //     input.addEventListener('keydown', handleKeyDown);
-    //   });
-  
-    //   // Cleanup event listeners
-    //   return () => {
-    //     numberInputs.forEach((input) => {
-    //       input.removeEventListener('keydown', handleKeyDown);
-    //     });
-    //   };
-    // }, []);
+
     const handleChange = (event) => {
       const { id, value } = event.target;
       
