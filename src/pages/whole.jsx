@@ -75,12 +75,12 @@ const Stopwatch = () => {
       <div className="controls">
       <div>
           <button id="start" className="button" onClick={isRunning ? handlePause : handleStart}>
-            {isRunning ? 'РЎС‚РѕРї' : 'РЎС‚Р°СЂС‚'}
+            {isRunning ? 'Стоп' : 'Старт'}
           </button>
         </div>
         <div>
           <button id="reset" className="button" onClick={handleReset}>
-            РЎР±СЂРѕСЃ
+            Сброс
           </button>
         </div>
       </div>
@@ -278,14 +278,14 @@ const TimerGym = () => {
   const training_with_breaks_active = <div>
       <div className='mode'>
         <div id={currentMode === 'WORK' ? 'mode_work' : 'mode_chill'}>
-          {(currentMode === 'WORK') ? 'С‚СЂРµРЅРёСЂРѕРІРєР°' : 'РѕС‚РґС‹С…'}
+          {(currentMode === 'WORK') ? 'тренировка' : 'отдых'}
         </div>
         <div id = "time">{formatTime(timeLeft)}</div>
-        <div id="repLeft">РџРѕРґС…РѕРґРѕРІ РѕСЃС‚Р°Р»РѕСЃСЊ: {repToEnd}</div>
+        <div id="repLeft">Подходов осталось: {repToEnd}</div>
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" tabindex="3" id = "start" onClick={handleReset}>РЎС‚РѕРї</button></div>
+          <div><button className = "button" tabindex="3" id = "start" onClick={handleReset}>Стоп</button></div>
           </table>
       </div>
       </div>
@@ -293,7 +293,7 @@ const TimerGym = () => {
       <div>
           <table className="inputs">
           <tr id="textOver">
-              <th colSpan={3}>С‚СЂРµРЅРёСЂРѕРІРєР°</th>
+              <th colSpan={3}>тренировка</th>
           </tr>
           <tr>
               <td>
@@ -306,7 +306,7 @@ const TimerGym = () => {
           </tr>
           <tr id='space'></tr>
           <tr id="textOver">
-              <th colSpan={3}>РѕС‚РґС‹С…</th>
+              <th colSpan={3}>отдых</th>
           </tr>
           
           <tr>
@@ -320,7 +320,7 @@ const TimerGym = () => {
           </tr>
           <tr id='space'></tr>
           <tr id="textOver">           
-              <th colSpan={3}>РїРѕРґС…РѕРґС‹</th>
+              <th colSpan={3}>подходы</th>
           </tr>
           
           <tr >
@@ -329,8 +329,8 @@ const TimerGym = () => {
           </table> 
       </div>
       <div className="controls">
-          <div><button id = "start" tabindex="8" className = "button" onClick={handleStart}>РЎС‚Р°СЂС‚</button></div>
-          <div><button id = "reset" tabindex="9" className = "button" onClick={handleClear}>РЎР±СЂРѕСЃ</button></div>
+          <div><button id = "start" tabindex="8" className = "button" onClick={handleStart}>Старт</button></div>
+          <div><button id = "reset" tabindex="9" className = "button" onClick={handleClear}>Сброс</button></div>
       </div>
       </div>
 
@@ -376,19 +376,19 @@ function startStopExternally() {
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button tabindex="1" id={globalMode === 'stopwatch' ? 'selected' : 'unselected'} onClick={setModeStopwatch}>РЎРµРєСѓРЅРґРѕРјРµСЂ</button>
-    <button tabindex="2" id={globalMode === 'timergym' ? 'selected' : 'unselected'} onClick={setModeTimer}>РљСЂРѕСЃСЃС„РёС‚</button>
+    <button tabindex="1" id={globalMode === 'stopwatch' ? 'selected' : 'unselected'} onClick={setModeStopwatch}>Секундомер</button>
+    <button tabindex="2" id={globalMode === 'timergym' ? 'selected' : 'unselected'} onClick={setModeTimer}>Кроссфит</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
     return (
       <>
         {menu}
-        <div id='message'>Р’СЂРµРјСЏ РІС‹С€Р»Рѕ</div>
+        <div id='message'>Время вышло</div>
         <div className="controls">
           
           <table>
-            <div className='controls'><button tabindex="3" id="reset" className="button" onClick={resetTimeIsEnd}>РЎР±СЂРѕСЃ</button></div>
+            <div className='controls'><button tabindex="3" id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
           </table>
         </div>
       </>
@@ -415,7 +415,7 @@ const initializeAssistant = (getState/*: any*/) => {
   if (process.env.NODE_ENV === "development") {
     return createSmartappDebugger({
       token: process.env.REACT_APP_TOKEN ?? "",
-      initPhrase: `Р—Р°РїСѓСЃС‚Рё ${process.env.REACT_APP_SMARTAPP}`,
+      initPhrase: `Запусти ${process.env.REACT_APP_SMARTAPP}`,
       getState,
     });
   }
@@ -531,7 +531,7 @@ export class Whole extends React.Component {
 
     const unsubscribe = this.assistant.sendData(
       data,
-      (data) => {   // С„СѓРЅРєС†РёСЏ, РІС‹Р·С‹РІР°РµРјР°СЏ, РµСЃР»Рё РЅР° sendData() Р±С‹Р» РѕС‚РїСЂР°РІР»РµРЅ РѕС‚РІРµС‚
+      (data) => {   // функция, вызываемая, если на sendData() был отправлен ответ
         const {type, payload} = data;
         console.log('sendData onData:', type, payload);
         unsubscribe();
