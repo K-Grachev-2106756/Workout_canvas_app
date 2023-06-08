@@ -1,5 +1,8 @@
+import tickSound from '../sounds/tick.mp3';
+import timerEndSound from '../sounds/timerEnd.mp3'
+
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createSmartappDebugger, createAssistant } from "@salutejs/client";
 
@@ -16,7 +19,6 @@ const formatTime = (time) => {
   const seconds = (time % 60).toString().padStart(2, '0');
   return `${minutes}:${seconds}`;
 };
-
 
 const Stopwatch = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -73,12 +75,12 @@ const Stopwatch = () => {
       <div className="controls">
       <div>
           <button id="start" className="button" onClick={isRunning ? handlePause : handleStart}>
-            {isRunning ? 'Стоп' : 'Старт'}
+            {isRunning ? 'РЎС‚РѕРї' : 'РЎС‚Р°СЂС‚'}
           </button>
         </div>
         <div>
           <button id="reset" className="button" onClick={handleReset}>
-            Сброс
+            РЎР±СЂРѕСЃ
           </button>
         </div>
       </div>
@@ -93,26 +95,35 @@ const TimerGym = () => {
     const [currentMode, setCurrentMode] = useState('WORK');
     const [isRunning, setIsRunning] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
-
-    useEffect(() => {
-      const handleKeyDown = (event) => {
-        if (event.key === 'ArrowUp') {
-          event.preventDefault();
-        }
-      };
+    let audio = useRef();
+    const playTickSound = () => {
+      audio.current = new Audio(tickSound);
+      audio.current.play();
+    }
+    const platTimerEndSound = () => {
+      audio.current = new Audio(timerEndSound);
+      audio.current.play();
+      // audio.current.pause();
+    }
+    // useEffect(() => {
+    //   const handleKeyDown = (event) => {
+    //     if (event.key === 'ArrowUp') {
+    //       event.preventDefault();
+    //     }
+    //   };
   
-      const numberInputs = document.querySelectorAll('input[type="number"]');
-      numberInputs.forEach((input) => {
-        input.addEventListener('keydown', handleKeyDown);
-      });
+    //   const numberInputs = document.querySelectorAll('input[type="number"]');
+    //   numberInputs.forEach((input) => {
+    //     input.addEventListener('keydown', handleKeyDown);
+    //   });
   
-      // Cleanup event listeners
-      return () => {
-        numberInputs.forEach((input) => {
-          input.removeEventListener('keydown', handleKeyDown);
-        });
-      };
-    }, []);
+    //   // Cleanup event listeners
+    //   return () => {
+    //     numberInputs.forEach((input) => {
+    //       input.removeEventListener('keydown', handleKeyDown);
+    //     });
+    //   };
+    // }, []);
     const handleChange = (event) => {
       const { id, value } = event.target;
       
@@ -134,14 +145,32 @@ const TimerGym = () => {
       } else if (id === 'rep_input') {
         setRepToEnd(parseInt(value) || 1);
         const rawRepLeft = document.getElementById('rep_input');
-        rawRepLeft.value = Math.max(1, parseInt(rawRepLeft.value));
-        rawRepLeft.value = Math.min(100, parseInt(rawRepLeft.value));
+        rawRepLeft.value = Math.max(1, parseInt(rawRepLeft.value)) || 1;
+        rawRepLeft.value = Math.min(100, parseInt(rawRepLeft.value)) || 1;
       }
     };
 
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+        }
+      };
+  
+      const numberInputs = document.querySelectorAll('input[type="number"]');
+      numberInputs.forEach((input) => {
+        input.addEventListener('keydown', handleKeyDown);
+      });
+  
+      // Cleanup event listeners
+      return () => {
+        numberInputs.forEach((input) => {
+          input.removeEventListener('keydown', handleKeyDown);
+        });
+      };
+    }, []);
+
     const handleStart = () => {
-      
-      
       const rawWorkMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_work').value))) || 0;
       const rawWorkSec = Math.max(0, Math.min(59, parseInt(document.getElementById('sec_input_work').value))) || 0;
       const rawChillMin = Math.max(0, Math.min(59, parseInt(document.getElementById('min_input_chill').value))) || 0;
@@ -174,6 +203,9 @@ const TimerGym = () => {
         setRepToEnd(0);
         setCurrentMode('WORK');
         setTimeLeft(0);
+        // audio.current.pause();
+        // window.soundManager.muteAll();
+
     };
     const handleClear = () => {
         timerIsRunning = false;
@@ -184,16 +216,17 @@ const TimerGym = () => {
         document.getElementById('rep_input').value = '';
     }
     useEffect(() => {
-        let timer = null;
-        const startWorkTimer = () => {
-        setCurrentMode('WORK');
-        setTimeLeft(workTimeConst);
-        };
+    let timer = null;
+    const startWorkTimer = () => {
+      setCurrentMode('WORK');
+      setTimeLeft(workTimeConst);
+    };
 
     const startChillTimer = () => {
+        playTickSound();
         setCurrentMode('CHILL');
         setTimeLeft(chillTimeConst);
-        };
+    };
     
     const handleTimerTick = () => {
     setTimeLeft((prevTimeLeft) => {
@@ -202,21 +235,23 @@ const TimerGym = () => {
         if (currentMode === 'WORK') {
             if (repToEnd > 0) {
             if (repToEnd - 1 !== 0) {
-                startChillTimer();
-                setRepToEnd((prevRepToEnd) => prevRepToEnd - 1);
+              startChillTimer();
+              setRepToEnd((prevRepToEnd) => prevRepToEnd - 1);
             } else {
-                timeIsEnd = true;
-                timerIsRunning = false;
-                root.render(<Menu />)
-                setIsRunning(false);
+              timeIsEnd = true;
+              platTimerEndSound();
+              timerIsRunning = false;
+              root.render(<Menu />)
+              setIsRunning(false);
             }
             } 
         } 
         else if (currentMode === 'CHILL') {
-            if (repToEnd === 0) {
+          if (repToEnd === 0) {
             return 0
-            }  
-            startWorkTimer();
+          }  
+          playTickSound();
+          startWorkTimer();
         }
         }
         return newTimeLeft;
@@ -225,10 +260,10 @@ const TimerGym = () => {
 
     if (isRunning) {
     if (currentMode === 'WORK' && repToEnd === 0) {
-        setIsRunning(false);
-        setTimeLeft(0);
+      setIsRunning(false);
+      setTimeLeft(0);
     } else {
-        timer = setInterval(handleTimerTick, 1000);
+      timer = setInterval(handleTimerTick, 1000);
     }
     }
     else {
@@ -239,18 +274,18 @@ const TimerGym = () => {
     clearInterval(timer);
     };
     }, [isRunning, currentMode, workTimeConst, chillTimeConst, repToEnd]);
-
+    
   const training_with_breaks_active = <div>
       <div className='mode'>
         <div id={currentMode === 'WORK' ? 'mode_work' : 'mode_chill'}>
-          {(currentMode === 'WORK') ? 'тренировка' : 'отдых'}
+          {(currentMode === 'WORK') ? 'С‚СЂРµРЅРёСЂРѕРІРєР°' : 'РѕС‚РґС‹С…'}
         </div>
         <div id = "time">{formatTime(timeLeft)}</div>
-        <div id="repLeft">Подходов осталось: {repToEnd}</div>
+        <div id="repLeft">РџРѕРґС…РѕРґРѕРІ РѕСЃС‚Р°Р»РѕСЃСЊ: {repToEnd}</div>
       </div>
       <div className='controls'>
           <table>
-          <div><button className = "button" tabindex="3" id = "start" onClick={handleReset}>Стоп</button></div>
+          <div><button className = "button" tabindex="3" id = "start" onClick={handleReset}>РЎС‚РѕРї</button></div>
           </table>
       </div>
       </div>
@@ -258,45 +293,44 @@ const TimerGym = () => {
       <div>
           <table className="inputs">
           <tr id="textOver">
-              <th colSpan={3}>тренировка</th>
+              <th colSpan={3}>С‚СЂРµРЅРёСЂРѕРІРєР°</th>
           </tr>
           <tr>
               <td>
-              <input type="number" tabindex="3" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input tabindex="3" type="text" id="min_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" tabindex="4" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input tabindex="4" type="text" id="sec_input_work" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
           <tr id="textOver">
-              <th colSpan={3}>отдых</th>
+              <th colSpan={3}>РѕС‚РґС‹С…</th>
           </tr>
           
           <tr>
               <td>
-              <input type="number" tabindex="5" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input tabindex="5" type="text" id="min_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
               <td id="separator">:</td>
               <td>
-              <input type="number" tabindex="6" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
+              <input tabindex="6" type="text" id="sec_input_chill" min="0" max="59" onChange={handleChange} placeholder="00" />
               </td>
           </tr>
           <tr id='space'></tr>
-          <tr id="textOver">
-              
-              <th colSpan={3}>подходы</th>
+          <tr id="textOver">           
+              <th colSpan={3}>РїРѕРґС…РѕРґС‹</th>
           </tr>
           
           <tr >
-              <td colSpan="3"><input type="number" tabindex="7" id="rep_input" onChange={handleChange} placeholder="1" /></td>
+              <td colSpan="3"><input tabindex="7" type="text" id="rep_input" onChange={handleChange} placeholder="1" /></td>
           </tr>
           </table> 
       </div>
       <div className="controls">
-          <div><button id = "start" tabindex="8" className = "button" onClick={handleStart}>Старт</button></div>
-          <div><button id = "reset" tabindex="9" className = "button" onClick={handleClear}>Сброс</button></div>
+          <div><button id = "start" tabindex="8" className = "button" onClick={handleStart}>РЎС‚Р°СЂС‚</button></div>
+          <div><button id = "reset" tabindex="9" className = "button" onClick={handleClear}>РЎР±СЂРѕСЃ</button></div>
       </div>
       </div>
 
@@ -342,19 +376,19 @@ function startStopExternally() {
 
 const Menu = () => {
   const menu = <div id="menu">
-    <button tabindex="1" id={globalMode === 'stopwatch' ? 'selected' : 'unselected'} onClick={setModeStopwatch}>Секундомер</button>
-    <button tabindex="2" id={globalMode === 'timergym' ? 'selected' : 'unselected'} onClick={setModeTimer}>Кроссфит</button>
+    <button tabindex="1" id={globalMode === 'stopwatch' ? 'selected' : 'unselected'} onClick={setModeStopwatch}>РЎРµРєСѓРЅРґРѕРјРµСЂ</button>
+    <button tabindex="2" id={globalMode === 'timergym' ? 'selected' : 'unselected'} onClick={setModeTimer}>РљСЂРѕСЃСЃС„РёС‚</button>
   </div>
 
   if (globalMode === 'timergym' && timeIsEnd) {
     return (
       <>
         {menu}
-        <div id='message'>Время вышло</div>
+        <div id='message'>Р’СЂРµРјСЏ РІС‹С€Р»Рѕ</div>
         <div className="controls">
           
           <table>
-            <div className='controls'><button tabindex="3" id="reset" className="button" onClick={resetTimeIsEnd}>Сброс</button></div>
+            <div className='controls'><button tabindex="3" id="reset" className="button" onClick={resetTimeIsEnd}>РЎР±СЂРѕСЃ</button></div>
           </table>
         </div>
       </>
@@ -381,7 +415,7 @@ const initializeAssistant = (getState/*: any*/) => {
   if (process.env.NODE_ENV === "development") {
     return createSmartappDebugger({
       token: process.env.REACT_APP_TOKEN ?? "",
-      initPhrase: `Запусти ${process.env.REACT_APP_SMARTAPP}`,
+      initPhrase: `Р—Р°РїСѓСЃС‚Рё ${process.env.REACT_APP_SMARTAPP}`,
       getState,
     });
   }
@@ -497,7 +531,7 @@ export class Whole extends React.Component {
 
     const unsubscribe = this.assistant.sendData(
       data,
-      (data) => {   // функция, вызываемая, если на sendData() был отправлен ответ
+      (data) => {   // С„СѓРЅРєС†РёСЏ, РІС‹Р·С‹РІР°РµРјР°СЏ, РµСЃР»Рё РЅР° sendData() Р±С‹Р» РѕС‚РїСЂР°РІР»РµРЅ РѕС‚РІРµС‚
         const {type, payload} = data;
         console.log('sendData onData:', type, payload);
         unsubscribe();
