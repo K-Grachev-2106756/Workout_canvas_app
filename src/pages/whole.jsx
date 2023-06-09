@@ -127,8 +127,8 @@ const TimerGym = () => {
       } else if (id === 'rep_input') {
         setRepToEnd(parseInt(value) || 1);
         const rawRepLeft = document.getElementById('rep_input');
-        rawRepLeft.value = Math.max(1, parseInt(rawRepLeft.value)) || 1;
-        rawRepLeft.value = Math.min(100, parseInt(rawRepLeft.value)) || 1;
+        rawRepLeft.value = Math.max(1, parseInt(rawRepLeft.value)) || '';
+        rawRepLeft.value = Math.min(100, parseInt(rawRepLeft.value)) || '';
       }
     };
 
