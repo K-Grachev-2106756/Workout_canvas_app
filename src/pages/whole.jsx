@@ -452,24 +452,18 @@ export class Whole extends React.Component {
     if (action) {
       switch (action.type) {
 
-        case 'open_stopwatch':
-          setModeStopwatch();
+        case 'start':
+          this.start();
           break;
 
-        case 'open_crossfit':
-          setModeTimer();
-          break;
-
-        case 'start_stopwatch':
-            setTimeout(() => {
-              startStopExternally();
-            }, 100);
-          break;
-        
         case 'stoppause':
           if ((globalMode === 'stopwatch' && stopwatchIsRunning===true) | (globalMode==='timergym' && timerIsRunning === true)) {
             startStopExternally();
           }
+          break;
+
+        case 'reset':
+          resetExternally();
           break;
 
         case 'check_mode_s':
@@ -480,23 +474,6 @@ export class Whole extends React.Component {
           this.checkModeCrossfit();
           break;
           
-        case 'reset':
-          console.log('reset', action);
-          resetExternally();
-          break;
-        
-        case 'check_crossfit':
-          this.checkCrossfit();
-          break;
-
-        case 'check_stopwatch':
-          this.checkStopwatch();
-          break;
-
-        case 'start_crossfit':
-          startStopExternally();
-          break;
-
         default:
           throw new Error();
       }
@@ -513,7 +490,7 @@ export class Whole extends React.Component {
 
     const unsubscribe = this.assistant.sendData(
       data,
-      (data) => {   // функция, вызываемая, если на sendData() был отправлен ответ
+      (data) => {
         const {type, payload} = data;
         console.log('sendData onData:', type, payload);
         unsubscribe();
@@ -526,7 +503,8 @@ export class Whole extends React.Component {
       flag = 'already';
     }
     else{
-      flag = 'mode_is_not_stopwatch';
+      flag = 'mode_will_be_changed';
+      setModeStopwatch();
     }
     
     this._send_action_value(flag);
@@ -538,44 +516,34 @@ export class Whole extends React.Component {
       flag = 'already';
     }
     else{
-      flag = 'mode_is_not_crossfit';
-    }
-    
-    this._send_action_value(flag);
-  }
-
-  checkCrossfit() {
-    let flag = '';
-    if (globalMode === 'timergym'){
-      if(timerIsRunning===true){
-        flag = 'already_running';
-      }
-      else {
-        if ((document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')){
-          flag = 'crossfit_all_right';
-        }
-      }
-    }
-    else{
+      flag = 'mode_will_be_changed';
       setModeTimer();
-      flag = 'invalid_crossfit_input';
     }
     
     this._send_action_value(flag);
   }
 
-  checkStopwatch() {
+  start() {
     let flag = '';
-    if (stopwatchIsRunning === false) {
-      if(globalMode === 'timergym'){
-        setModeStopwatch();
-      }
-      flag = 'is_not_running';
-    }
-    else{
+
+    if(stopwatchIsRunning === true || timerIsRunning === true){
       flag = 'already_running';
     }
-    
+    else{
+      if (globalMode === 'timergym'){
+        if ((document.getElementById('min_input_work').value !== '') | (document.getElementById('sec_input_work').value !== '')){
+          flag = 'start_crossfit';
+          startStopExternally();
+        }
+        else{
+          flag = 'invalid_crossfit_input';
+        }
+      }
+      else{
+        flag = 'start_stopwatch';          
+        startStopExternally();
+      }      
+    }
     this._send_action_value(flag);
   }
 
